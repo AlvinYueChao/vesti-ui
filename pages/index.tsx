@@ -1,3 +1,3 @@
-import HomePage from './home/HomePage';
+import { StyleTest } from './onboarding/StyleTest';
 
-export default HomePage;
+export default StyleTest;

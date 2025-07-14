@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
+import { BottomNavigation } from '../../components/common/BottomNavigation';
 
 interface OutfitRecommendation {
   id: string;
@@ -11,6 +12,7 @@ interface OutfitRecommendation {
 
 const HomePage: React.FC = () => {
   const [currentOutfitIndex, setCurrentOutfitIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState('home');
 
   const recommendations: OutfitRecommendation[] = [
     {
@@ -47,6 +49,11 @@ const HomePage: React.FC = () => {
 
   const handleLikeOutfit = () => {
     console.log('Liked outfit:', recommendations[currentOutfitIndex]);
+  };
+
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId);
+    console.log('Tab changed to:', tabId);
   };
 
   const currentOutfit = recommendations[currentOutfitIndex];
@@ -119,6 +126,8 @@ const HomePage: React.FC = () => {
           </div>
         </section>
       </main>
+      
+      <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
     </div>
   );
 };

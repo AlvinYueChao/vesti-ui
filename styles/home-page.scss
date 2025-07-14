@@ -41,15 +41,25 @@
 }
 
 .home-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
   &__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
+    flex-shrink: 0;
   }
 
   &__main {
+    flex: 1;
     padding: 1rem;
+    padding-bottom: 4rem;
+    overflow-y: auto;
+    min-height: 0;
   }
 }
 
@@ -96,7 +106,8 @@
 
 .outfit-card__image {
   width: 100%;
-  height: 400px;
+  height: 300px;
+  max-height: 40vh;
   overflow: hidden;
   border-radius: 15px;
   margin-bottom: 1rem;

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import { Logo } from '../../components/common/Logo';
 import { SwipeCard } from '../../components/ui/SwipeCard';
 import { Button } from '../../components/ui/Button';
@@ -10,6 +11,7 @@ interface StyleOption {
 }
 
 export const StyleTest: React.FC = () => {
+  const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [preferences, setPreferences] = useState<string[]>([]);
 
@@ -39,8 +41,8 @@ export const StyleTest: React.FC = () => {
   };
 
   const handleStartJourney = () => {
-    // Navigate to home page
     console.log('User preferences:', preferences);
+    router.push('/home/HomePage');
   };
 
   const isTestComplete = currentIndex >= styleOptions.length;
@@ -57,28 +59,62 @@ export const StyleTest: React.FC = () => {
           选出你更偏爱的穿搭风格，让我更懂你
         </p>
 
-        <div className="style-test__cards">
-          {!isTestComplete && styleOptions[currentIndex] && (
-            <SwipeCard
-              image={styleOptions[currentIndex].image}
-              onSwipeLeft={handleSwipeLeft}
-              onSwipeRight={handleSwipeRight}
-            />
-          )}
+        <div className="style-test__card-container">
+          <div className="style-test__card-stack">
+            {styleOptions.map((option, index) => (
+              <div
+                key={option.id}
+                className={`style-test__card ${index === currentIndex ? 'style-test__card--active' : ''}`}
+                style={{ 
+                  zIndex: styleOptions.length - index,
+                  transform: `translateY(${index * 4}px) translateX(${index * 2}px)`,
+                  opacity: index <= currentIndex + 1 ? 1 : 0.7
+                }}
+              >
+                <div className="style-test__card-content">
+                  <img 
+                    src={option.image} 
+                    alt={`${option.style} style`}
+                    className="style-test__card-image"
+                  />
+                  <div className="style-test__card-overlay">
+                    <div className="style-test__card-dots">
+                      <div className="style-test__dot">?</div>
+                      <div className="style-test__dot">?</div>
+                      <div className="style-test__dot">?</div>
+                      <div className="style-test__dot">?</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="style-test__actions">
+            <Button 
+              onClick={handleSwipeLeft}
+            >
+              ✕
+            </Button>
+            <Button 
+              onClick={handleSwipeRight}
+            >
+              ✓
+            </Button>
+          </div>
         </div>
       </div>
 
       <div className="style-test__footer">
-        {isTestComplete && (
-          <Button 
-            variant="primary" 
-            size="large" 
-            fullWidth
-            onClick={handleStartJourney}
-          >
-            开启设计之旅
-          </Button>
-        )}
+        <Button 
+          variant="primary" 
+          size="large" 
+          fullWidth
+          className="style-test__start-button"
+          onClick={handleStartJourney}
+        >
+          开启设计之旅
+        </Button>
       </div>
     </div>
   );
