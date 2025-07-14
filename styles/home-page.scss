@@ -1,0 +1,123 @@
+.home-page__main {
+  .daily-outfit-canvas {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  .quick-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+
+    .quick-action-canvas {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      width: 45%;
+
+      .quick-action-button {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .quick-action-text {
+        font-size: 14px;
+        color: var(--text-color);
+      }
+    }
+  }
+}
+
+.home-page {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  &__main {
+    padding: 1rem;
+  }
+}
+
+.weather-info {
+  display: flex;
+  align-items: center;
+
+  &__icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+  }
+
+  &__text {
+    font-size: 1rem;
+  }
+}
+
+.diary-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.daily-outfit {
+  text-align: left;
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  &__subtitle {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 1rem;
+  }
+}
+
+.outfit-card__image {
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 15px;
+  margin-bottom: 1rem;
+  background-color: var(--sky-blue-color);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.outfit-card__actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.outfit-card__button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}

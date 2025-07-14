@@ -1,0 +1,37 @@
+{
+  "name": "pocket-designer",
+  "version": "1.0.0",
+  "description": "AI-powered fashion styling assistant",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^15.4.0-canary.128",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0",
+    "sass": "^1.69.0"
+  },
+  "keywords": [
+    "fashion",
+    "ai",
+    "styling",
+    "wardrobe",
+    "outfit",
+    "recommendation"
+  ],
+  "author": "Pocket Designer Team",
+  "license": "MIT"
+}
