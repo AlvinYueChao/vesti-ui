@@ -38,6 +38,25 @@ export interface OutfitRecommendation {
   image?: string;
 }
 
+export interface ScenarioOption {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  tags: string[];
+}
+
+export interface OutfitResult {
+  id: string;
+  type: 'scenario' | 'item-based';
+  title: string;
+  subtitle?: string;
+  targetItem?: ClothingItem;
+  scenario?: ScenarioOption;
+  outfits: OutfitRecommendation[];
+  currentIndex: number;
+}
+
 export interface WeatherInfo {
   location: string;
   temperature: number;

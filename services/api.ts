@@ -5,10 +5,80 @@ import { ClothingItem, OutfitRecommendation, WeatherInfo, ApiResponse } from '..
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api.pocketdesigner.com';
 
 class ApiService {
+  private useMockData = true; // Set to false when real API is available
+
+  private mockWardrobeData: ClothingItem[] = [
+    {
+      id: '1',
+      name: '条纹衬衫',
+      category: 'tops',
+      color: '蓝白',
+      brand: 'UNIQLO',
+      image: '/assets/images/striped-shirt.jpg',
+      tags: ['休闲', '经典'],
+      addedDate: new Date('2024-01-15')
+    },
+    {
+      id: '2',
+      name: '白色T恤',
+      category: 'tops',
+      color: '白色',
+      brand: 'H&M',
+      image: '/assets/images/white-tee.jpg',
+      tags: ['基础款', '百搭'],
+      addedDate: new Date('2024-01-20')
+    },
+    {
+      id: '3',
+      name: '牛仔裤',
+      category: 'bottoms',
+      color: '深蓝',
+      brand: 'Levi\'s',
+      image: '/assets/images/jeans.jpg',
+      tags: ['经典', '耐穿'],
+      addedDate: new Date('2024-01-10')
+    },
+    {
+      id: '4',
+      name: '小白鞋',
+      category: 'shoes',
+      color: '白色',
+      brand: 'Adidas',
+      image: '/assets/images/white-sneakers.jpg',
+      tags: ['运动', '百搭'],
+      addedDate: new Date('2024-01-25')
+    },
+    {
+      id: '5',
+      name: '黑色西装裤',
+      category: 'bottoms',
+      color: '黑色',
+      brand: 'ZARA',
+      image: '/assets/images/black-pants.jpg',
+      tags: ['正式', '商务'],
+      addedDate: new Date('2024-02-01')
+    },
+    {
+      id: '6',
+      name: '丝巾',
+      category: 'accessories',
+      color: '花色',
+      brand: 'Hermès',
+      image: '/assets/images/silk-scarf.jpg',
+      tags: ['优雅', '配饰'],
+      addedDate: new Date('2024-02-05')
+    }
+  ];
+
   private async request<T>(
     endpoint: string, 
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
+    // Use mock data in development
+    if (this.useMockData) {
+      return this.handleMockRequest<T>(endpoint, options);
+    }
+
     try {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         headers: {
@@ -32,6 +102,57 @@ class ApiService {
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
+      };
+    }
+  }
+
+  private async handleMockRequest<T>(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<ApiResponse<T>> {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    try {
+      if (endpoint.includes('/wardrobe') && options.method !== 'POST' && options.method !== 'DELETE') {
+        return {
+          success: true,
+          data: this.mockWardrobeData as T,
+        };
+      }
+
+      if (endpoint.includes('/wardrobe') && options.method === 'POST') {
+        const newItem = JSON.parse(options.body as string);
+        const itemWithId = {
+          ...newItem,
+          id: Date.now().toString(),
+          addedDate: new Date()
+        };
+        this.mockWardrobeData.push(itemWithId);
+        return {
+          success: true,
+          data: itemWithId as T,
+        };
+      }
+
+      if (endpoint.includes('/wardrobe') && options.method === 'DELETE') {
+        const itemId = endpoint.split('/').pop();
+        this.mockWardrobeData = this.mockWardrobeData.filter(item => item.id !== itemId);
+        return {
+          success: true,
+          data: null as T,
+        };
+      }
+
+      // Default mock response
+      return {
+        success: true,
+        data: {} as T,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Mock API error',
       };
     }
   }

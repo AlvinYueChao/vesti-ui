@@ -1,0 +1,110 @@
+.scenario-selection-page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding-bottom: 2rem;
+
+  .scenario-selection__header {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
+    .back-button {
+      background: none;
+      border: none;
+      padding: 0.5rem;
+      margin-right: 1rem;
+      cursor: pointer;
+
+      img {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .page-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+  }
+
+  .scenario-selection__main {
+    padding: 1.5rem 1rem;
+
+    .scenario-selection__subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+    }
+
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+
+      .scenario-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 2px solid transparent;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        &.selected {
+          border-color: #ff6b6b;
+          background-color: #fff5f5;
+        }
+
+        .scenario-card__icon {
+          font-size: 2.5rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .scenario-card__name {
+          font-size: 1rem;
+          font-weight: 600;
+          color: #333;
+          margin: 0.5rem 0;
+        }
+
+        .scenario-card__description {
+          font-size: 0.8rem;
+          color: #666;
+          margin-bottom: 1rem;
+          line-height: 1.4;
+        }
+
+        .scenario-card__tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.25rem;
+          justify-content: center;
+
+          .tag {
+            background-color: #f0f0f0;
+            color: #666;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+          }
+        }
+      }
+    }
+  }
+}
