@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button } from './Button';
 
 interface SwipeCardProps {
   image: string;
@@ -32,18 +33,22 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
       </div>
       
       <div className="swipe-card__actions">
-        <button 
-          className="swipe-card__action swipe-card__action--dislike"
+        <Button 
+          variant="secondary"
+          shape="circle"
+          size="medium"
           onClick={handleSwipeLeft}
         >
           ✕
-        </button>
-        <button 
-          className="swipe-card__action swipe-card__action--like"
+        </Button>
+        <Button 
+          variant="secondary"
+          shape="circle"
+          size="medium"
           onClick={handleSwipeRight}
         >
           ✓
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -1,0 +1,156 @@
+
+.wardrobe-page {
+  padding: 0; // Remove all padding to allow full-width layout
+
+  &__header {
+    display: none; // Hide the header completely
+  }
+
+  &__title {
+    display: none; // Hide the title
+  }
+}
+
+.category-filter {
+  margin-bottom: 1rem;
+  margin-top: 0; // Remove top margin to position at screen top
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  
+  // Show scrollbar on narrow screens, hide on wider screens
+  @media (min-width: 480px) {
+    // Hide scrollbar on wider screens
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    
+    &::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
+  }
+  
+  @media (max-width: 479px) {
+    // Show scrollbar on narrow screens
+    scrollbar-width: thin; /* Firefox */
+    -ms-overflow-style: auto; /* IE and Edge */
+    
+    &::-webkit-scrollbar {
+      display: block;
+      height: 6px; /* Thin scrollbar */
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 3px;
+      
+      &:hover {
+        background: rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+
+  &__scroll {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.25rem 1rem; // Match the grid padding for alignment
+    min-width: min-content; // Ensure container is wide enough for all items
+  }
+
+  &__item {
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s;
+    white-space: nowrap; // Prevent text wrapping
+    flex-shrink: 0; // Prevent items from shrinking
+    min-width: fit-content; // Ensure button is wide enough for content
+    
+    // Ensure active state doesn't get clipped
+    margin: 0.1rem 0; // Small vertical margin for scale transform
+
+    &--active {
+      transform: scale(1.1);
+    }
+
+    &:hover {
+      opacity: 0.9;
+    }
+    
+    // Remove extra margins to align with grid
+    &:first-child {
+      margin-left: 0; // Align with grid left edge
+    }
+    
+    &:last-child {
+      margin-right: 0; // Align with grid right edge
+    }
+  }
+}
+
+.wardrobe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  padding: 0 1rem; // Add horizontal padding back to grid
+}
+
+.wardrobe-item {
+  &__image {
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__info {
+    padding: 0.5rem;
+  }
+
+  &__name {
+    font-weight: bold;
+  }
+
+  &__details {
+    color: #666;
+  }
+
+  &--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 220px; // Adjust to match item height
+    border: 2px dashed #ccc;
+  }
+
+  &__placeholder-icon {
+    font-size: 2rem;
+    color: #ccc;
+  }
+}
+
+.fab {
+  position: fixed;
+  bottom: 5rem; // Adjust to avoid overlapping with bottom navigation
+  right: 1rem;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background-color: #FF6B6B;
+  color: white;
+  font-size: 2rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}

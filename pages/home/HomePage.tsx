@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
+import { BottomNavigation } from '../../components/common/BottomNavigation';
 
 interface OutfitRecommendation {
   id: string;
@@ -10,7 +11,9 @@ interface OutfitRecommendation {
 }
 
 const HomePage: React.FC = () => {
+  const router = useRouter();
   const [currentOutfitIndex, setCurrentOutfitIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState('home');
 
   const recommendations: OutfitRecommendation[] = [
     {
@@ -47,6 +50,28 @@ const HomePage: React.FC = () => {
 
   const handleLikeOutfit = () => {
     console.log('Liked outfit:', recommendations[currentOutfitIndex]);
+  };
+
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId);
+    
+    // Navigate to different pages based on tab selection
+    switch (tabId) {
+      case 'home':
+        router.push('/home');
+        break;
+      case 'wardrobe':
+        router.push('/wardrobe');
+        break;
+      case 'discover':
+        router.push('/discover');
+        break;
+      case 'profile':
+        router.push('/profile');
+        break;
+      default:
+        break;
+    }
   };
 
   const currentOutfit = recommendations[currentOutfitIndex];
@@ -119,6 +144,8 @@ const HomePage: React.FC = () => {
           </div>
         </section>
       </main>
+      
+      <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
     </div>
   );
 };

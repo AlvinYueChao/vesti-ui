@@ -7,6 +7,7 @@ interface ButtonProps {
   shape?: 'square' | 'circle';
   size?: 'medium' | 'large';
   className?: string;
+  fullWidth?: boolean;
 }
 
 export const Button: React.FC<ButtonProps> = ({ 
@@ -15,9 +16,10 @@ export const Button: React.FC<ButtonProps> = ({
   variant = 'primary', 
   shape = 'square',
   size = 'medium',
-  className 
+  className,
+  fullWidth = false
 }) => {
-  const buttonClass = `btn btn--${variant} btn--${shape} btn--${size} ${className || ''}`.trim();
+  const buttonClass = `btn btn--${variant} btn--${shape} btn--${size} ${fullWidth ? 'btn--full-width' : ''} ${className || ''}`.trim();
 
   return (
     <button className={buttonClass} onClick={onClick}>
