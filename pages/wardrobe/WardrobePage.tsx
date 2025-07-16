@@ -18,14 +18,39 @@ const categories = [
 
 export const WardrobePage: React.FC = () => {
   const router = useRouter();
+  const { mode } = router.query; // Get mode from query params
+  const isSelectMode = mode === 'select';
+  
   // Assuming a fixed user ID for now
   const userId = 'user-123';
   const { items, loading, getItemsByCategory } = useWardrobe(userId);
   const [activeCategory, setActiveCategory] = useState<ClothingCategory | 'all'>('all');
   const [activeTab, setActiveTab] = useState('wardrobe');
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   const handleCategoryChange = (category: ClothingCategory | 'all') => {
     setActiveCategory(category);
+  };
+
+  const handleItemSelect = (itemId: string) => {
+    if (isSelectMode) {
+      const item = items.find(i => i.id === itemId);
+      if (item) {
+        // Navigate to outfit result page with selected item
+        router.push({
+          pathname: '/outfit-result',
+          query: {
+            type: 'item-based',
+            itemId: item.id,
+            itemName: item.name
+          }
+        });
+      }
+    }
+  };
+
+  const handleBack = () => {
+    router.back();
   };
 
   const handleAddItem = () => {
@@ -62,7 +87,14 @@ export const WardrobePage: React.FC = () => {
   return (
     <div className="wardrobe-page">
       <header className="wardrobe-page__header">
-        <h1 className="wardrobe-page__title">智能衣橱</h1>
+        {isSelectMode && (
+          <button className="back-button" onClick={handleBack}>
+            <img src="/assets/icons/actions/chevron-left.svg" alt="返回" />
+          </button>
+        )}
+        <h1 className="wardrobe-page__title">
+          {isSelectMode ? '选择要搭配的单品' : '智能衣橱'}
+        </h1>
       </header>
 
       <CategoryFilter
@@ -71,11 +103,16 @@ export const WardrobePage: React.FC = () => {
         onCategoryChange={handleCategoryChange}
       />
 
-      <WardrobeGrid items={filteredItems} loading={loading} />
+      <WardrobeGrid 
+        items={filteredItems} 
+        loading={loading}
+        selectMode={isSelectMode}
+        onItemSelect={handleItemSelect}
+      />
 
-      <FloatingActionButton onClick={handleAddItem} />
+      {!isSelectMode && <FloatingActionButton onClick={handleAddItem} />}
 
-      <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
+      {!isSelectMode && <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />}
     </div>
   );
 };

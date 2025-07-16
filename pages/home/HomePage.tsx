@@ -74,6 +74,16 @@ const HomePage: React.FC = () => {
     }
   };
 
+  const handleHelpMeStyle = () => {
+    // Navigate to wardrobe page for item selection
+    router.push('/wardrobe?mode=select');
+  };
+
+  const handleScenarioStyling = () => {
+    // Navigate to scenario selection page
+    router.push('/scenario-selection');
+  };
+
   const currentOutfit = recommendations[currentOutfitIndex];
 
   return (
@@ -130,13 +140,13 @@ const HomePage: React.FC = () => {
         </div>
 
         <section className="quick-actions">
-          <div className="quick-action-canvas">
+          <div className="quick-action-canvas" onClick={handleHelpMeStyle}>
             <Button variant="primary" className="quick-action-button">
               搭
             </Button>
             <p className="quick-action-text">帮我搭这件</p>
           </div>
-          <div className="quick-action-canvas">
+          <div className="quick-action-canvas" onClick={handleScenarioStyling}>
             <Button variant="secondary" className="quick-action-button">
               景
             </Button>
