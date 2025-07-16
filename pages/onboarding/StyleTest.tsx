@@ -10,7 +10,11 @@ interface StyleOption {
   style: string;
 }
 
-export const StyleTest: React.FC = () => {
+interface StyleTestProps {
+  onComplete?: () => void;
+}
+
+export const StyleTest: React.FC<StyleTestProps> = ({ onComplete }) => {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [preferences, setPreferences] = useState<string[]>([]);
@@ -42,7 +46,13 @@ export const StyleTest: React.FC = () => {
 
   const handleStartJourney = () => {
     console.log('User preferences:', preferences);
-    router.push('/home/HomePage');
+    // Save user preferences to localStorage or API
+    localStorage.setItem('user_style_preferences', JSON.stringify(preferences));
+    
+    // Call the onComplete callback to mark onboarding as finished
+    if (onComplete) {
+      onComplete();
+    }
   };
 
   const isTestComplete = currentIndex >= styleOptions.length;
