@@ -1,40 +1,90 @@
 .home-page__main {
+  .daily-outfit-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 6px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
   .daily-outfit-canvas {
-    background-color: #f0f0f0;
-    padding: 20px;
-    border-radius: 15px;
+    background-color: white;
+    padding: 0;
+    border-radius: 0;
+    margin-bottom: 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
 
   .quick-actions {
     display: flex;
     justify-content: space-around;
-    margin-top: 20px;
+    margin-top: 0;
+    flex-shrink: 0;
+    height: 120px;
+    padding: 0 2rem;
 
     .quick-action-canvas {
       display: flex;
       flex-direction: column;
       align-items: center;
-      background-color: white;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-      width: 45%;
+      background-color: transparent;
+      padding: 0;
+      border-radius: 0;
+      box-shadow: none;
+      width: 100px;
+      height: 100px;
 
       .quick-action-button {
         width: 60px;
         height: 60px;
-        border-radius: 10px;
+        border-radius: 16px;
         display: flex;
         justify-content: center;
         align-items: center;
         font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 10px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &.btn--primary {
+          background-color: #ff6b6b;
+          color: white;
+
+          &:hover {
+            background-color: #ff5252;
+          }
+
+          &:active {
+            transform: translateY(1px);
+          }
+        }
+
+        &.btn--scenario {
+          background-color: #e3f2fd;
+          color: #1565c0;
+
+          &:hover {
+            background-color: #bbdefb;
+          }
+
+          &:active {
+            transform: translateY(1px);
+          }
+        }
       }
 
       .quick-action-text {
         font-size: 14px;
         color: var(--text-color);
+        font-weight: 500;
+        margin-top: 8px;
+        margin-bottom: 0;
       }
     }
   }
@@ -57,9 +107,11 @@
   &__main {
     flex: 1;
     padding: 1rem;
-    padding-bottom: 4rem;
-    overflow-y: auto;
+    padding-bottom: 5rem;
+    overflow: hidden;
     min-height: 0;
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -92,31 +144,45 @@
   text-align: left;
 
   &__title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: bold;
-    margin-bottom: 0.5rem;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    color: var(--text-color);
   }
 
   &__subtitle {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: #666;
-    margin-bottom: 1rem;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    
+    .highlight-text {
+      color: #ff6b6b;
+      font-weight: 600;
+    }
   }
 }
 
 .outfit-card__image {
   width: 100%;
-  height: 300px;
-  max-height: 40vh;
+  flex: 1;
+  min-height: 300px;
+  max-height: 60vh;
   overflow: hidden;
-  border-radius: 15px;
+  border-radius: 16px;
   margin-bottom: 1rem;
-  background-color: var(--sky-blue-color);
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
   }
 }
 
@@ -124,11 +190,65 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
+  height: 80px;
+  margin-bottom: 5px;
 }
 
 .outfit-card__button-group {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
+  transform: scale(0.9);
+  
+  .btn {
+    &--medium {
+      width: 50px;
+      height: 50px;
+      background-color: #f5f5f5;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background-color: #e0e0e0;
+        transform: scale(1.05);
+      }
+      
+      img {
+        width: 20px;
+        height: 20px;
+        filter: brightness(0) saturate(100%) invert(40%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(96%) contrast(96%);
+      }
+    }
+    
+    &--large {
+      width: 60px;
+      height: 60px;
+      background-color: #6c5ce7;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background-color: #5a4fcf;
+        transform: scale(1.05);
+      }
+      
+      img {
+        width: 24px;
+        height: 24px;
+        filter: brightness(0) invert(1);
+      }
+    }
+  }
 }

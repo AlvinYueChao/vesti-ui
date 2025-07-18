@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
 import { Logo } from '../../components/common/Logo';
 import { Button } from '../../components/ui/Button';
 
@@ -14,7 +13,6 @@ interface StyleTestProps {
 }
 
 export const StyleTest: React.FC<StyleTestProps> = ({ onComplete }) => {
-  const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [preferences, setPreferences] = useState<string[]>([]);
 
@@ -75,18 +73,46 @@ export const StyleTest: React.FC<StyleTestProps> = ({ onComplete }) => {
       <div className="style-test__content" style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '10px 20px' }}>
         <div className="style-test__card-container" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           <div className="style-test__card-stack" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '400px' }}>
-            <div className="style-test__card style-test__card--active" style={{ width: '100%', maxWidth: '350px', height: '450px' }}>
-              <div className="style-test__card-content" style={{ width: '100%', height: '100%' }}>
+            <div className="style-test__card style-test__card--active" style={{
+              width: '100%',
+              maxWidth: '350px',
+              height: 'min(450px, 70vh)',
+              aspectRatio: '7/9' // 保持固定宽高比
+            }}>
+              <div className="style-test__card-content" style={{
+                width: '100%',
+                height: '100%',
+                position: 'relative',
+                overflow: 'hidden',
+                borderRadius: '16px',
+                backgroundColor: '#f5f5f5',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
                 <img
                   src={styleOptions[currentIndex]?.image}
                   alt={`${styleOptions[currentIndex]?.style} style`}
                   className="style-test__card-image"
-                  style={{ 
-                    width: '100%', 
-                    height: '100%', 
-                    objectFit: 'contain'
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'center',
+                    imageRendering: 'crisp-edges',
+                    transform: 'translateZ(0)', // 启用硬件加速
+                    backfaceVisibility: 'hidden', // 优化渲染
+                    WebkitBackfaceVisibility: 'hidden',
+                    willChange: 'transform'
                   }}
-                  key={currentIndex} // 强制重新渲染
+                  key={currentIndex}
+                  loading="eager"
+                  decoding="sync"
+                  onLoad={(e) => {
+                    // 确保图片加载后保持最佳显示质量
+                    const img = e.target as HTMLImageElement;
+                    img.style.imageRendering = 'auto';
+                  }}
                 />
               </div>
             </div>
@@ -95,13 +121,15 @@ export const StyleTest: React.FC<StyleTestProps> = ({ onComplete }) => {
           <div className="style-test__actions" style={{ flexShrink: 0, display: 'flex', justifyContent: 'center', gap: '40px', padding: '20px 0' }}>
             <Button
               onClick={handleSwipeLeft}
-              style={{ width: '60px', height: '60px', borderRadius: '50%', fontSize: '24px' }}
+              shape="circle"
+              className="style-test__action-button style-test__action-button--reject"
             >
               ✕
             </Button>
             <Button
               onClick={handleSwipeRight}
-              style={{ width: '60px', height: '60px', borderRadius: '50%', fontSize: '24px' }}
+              shape="circle"
+              className="style-test__action-button style-test__action-button--like"
             >
               ✓
             </Button>
