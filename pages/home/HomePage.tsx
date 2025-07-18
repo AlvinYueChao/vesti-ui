@@ -124,7 +124,7 @@ const HomePage: React.FC = () => {
                 <img src="/assets/icons/actions/chevron-left.svg" alt="Previous" />
               </Button>
               <Button
-                variant="primary"
+                variant="heart"
                 shape="circle"
                 size="large"
                 onClick={handleLikeOutfit}
