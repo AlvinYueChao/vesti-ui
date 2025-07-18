@@ -2,8 +2,8 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background-color: var(--background-color);
+    color: var(--text-color);
     padding: 1rem;
 
     &__header {
@@ -28,35 +28,58 @@
 
     &__description {
         font-size: 1rem;
-        opacity: 0.9;
+        color: var(--text-secondary);
         margin-bottom: 2rem;
     }
 
     &__card-container {
         position: relative;
-        width: 280px;
-        height: 400px;
-        margin-bottom: 2rem;
+        width: 100%;
+        max-width: 350px;
+        height: min(450px, 70vh);
+        margin: 0 auto 2rem;
+        
+        // 响应式适配
+        @media (max-width: 480px) {
+            max-width: 90vw;
+            height: min(400px, 60vh);
+        }
+        
+        @media (max-width: 360px) {
+            max-width: 95vw;
+            height: min(350px, 55vh);
+        }
     }
 
     &__card-stack {
         position: relative;
         width: 100%;
         height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     &__card {
-        position: absolute;
+        position: relative;
         width: 100%;
         height: 100%;
         border-radius: 16px;
         overflow: hidden;
         background: white;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        
+        // 保持宽高比
+        aspect-ratio: 7/9;
 
         &--active {
             transform: scale(1) !important;
+        }
+        
+        // 响应式圆角调整
+        @media (max-width: 480px) {
+            border-radius: 12px;
         }
     }
 
@@ -70,6 +93,57 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+        object-position: center;
+        
+        // 优化图片渲染质量
+        image-rendering: auto;
+        image-rendering: -webkit-optimize-contrast;
+        
+        // 硬件加速和性能优化
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        will-change: transform;
+        
+        // 确保图片平滑缩放
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        
+        // 高分辨率显示优化
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: auto;
+        }
+        
+        // Retina显示屏优化
+        @media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 288dpi) {
+            image-rendering: auto;
+        }
+        
+        // 响应式图片容器适配
+        @media (max-width: 480px) {
+            object-fit: contain;
+            background-color: #f8f9fa;
+        }
+        
+        // 确保图片加载时的平滑过渡
+        opacity: 0;
+        animation: fadeInImage 0.3s ease-in-out forwards;
+        
+        &:hover {
+            transform: translateZ(0) scale(1.02);
+        }
+    }
+    
+    // 图片淡入动画
+    @keyframes fadeInImage {
+        from {
+            opacity: 0;
+            transform: translateZ(0) scale(0.98);
+        }
+        to {
+            opacity: 1;
+            transform: translateZ(0) scale(1);
+        }
     }
 
     &__card-overlay {
@@ -108,25 +182,47 @@
         gap: 2rem;
         justify-content: center;
         margin-top: 1rem;
+    }
 
-        button {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
+    &__action-button {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 2px solid var(--secondary-color);
+        background: var(--background-color);
+        color: var(--text-color);
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+        &:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
+
+        &--reject {
+            color: var(--red-primary);
+            border-color: rgba(255, 90, 95, 0.3);
 
             &:hover {
-                background: rgba(255, 255, 255, 0.2);
-                transform: scale(1.1);
+                background: rgba(255, 90, 95, 0.1);
+                border-color: var(--red-primary);
             }
+        }
 
-            &:active {
-                transform: scale(0.95);
+        &--like {
+            color: var(--primary-color);
+            border-color: rgba(106, 90, 205, 0.3);
+
+            &:hover {
+                background: rgba(106, 90, 205, 0.1);
+                border-color: var(--primary-color);
             }
         }
     }
@@ -136,17 +232,21 @@
     }
 
     &__start-button {
-        background: rgba(255, 255, 255, 0.2);
-        border: 2px solid rgba(255, 255, 255, 0.3);
+        background-color: #ff6b6b;
         color: white;
         font-weight: 600;
         padding: 1rem 2rem;
         border-radius: 12px;
+        border: none;
+        cursor: pointer;
         transition: all 0.2s ease;
 
         &:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
+            background-color: #ff5252;
+        }
+
+        &:active {
+            transform: translateY(1px);
         }
     }
 }

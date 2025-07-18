@@ -101,14 +101,18 @@ const HomePage: React.FC = () => {
       </header>
 
       <main className="home-page__main">
-        <div className="daily-outfit-canvas">
+        <div className="daily-outfit-section">
           <h2 className="daily-outfit__title">今日设计</h2>
           <p className="daily-outfit__subtitle">
-            Hi, 今天为你准备了3套上班LOOK
+            Hi, 今天为你准备了3套<span className="highlight-text">上班</span>LOOK
           </p>
-          <div className="outfit-card__image">
-            <img src={'/assets/images/outfit-1.jpg'} alt="Today's outfit" />
+          
+          <div className="daily-outfit-canvas">
+            <div className="outfit-card__image">
+              <img src={currentOutfit.image} alt="Today's outfit" />
+            </div>
           </div>
+
           <div className="outfit-card__actions">
             <div className="outfit-card__button-group">
               <Button
@@ -120,7 +124,7 @@ const HomePage: React.FC = () => {
                 <img src="/assets/icons/actions/chevron-left.svg" alt="Previous" />
               </Button>
               <Button
-                variant="primary"
+                variant="heart"
                 shape="circle"
                 size="large"
                 onClick={handleLikeOutfit}
@@ -147,7 +151,7 @@ const HomePage: React.FC = () => {
             <p className="quick-action-text">帮我搭这件</p>
           </div>
           <div className="quick-action-canvas" onClick={handleScenarioStyling}>
-            <Button variant="secondary" className="quick-action-button">
+            <Button variant="secondary" className="quick-action-button btn--scenario">
               景
             </Button>
             <p className="quick-action-text">场景着装</p>
