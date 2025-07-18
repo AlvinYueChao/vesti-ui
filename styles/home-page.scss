@@ -12,11 +12,14 @@
     background-color: white;
     padding: 0;
     border-radius: 0;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     flex: 1;
     display: flex;
     flex-direction: column;
     min-height: 0;
+    max-height: none;
+    width: 100%;
+    max-width: 100%;
   }
 
   .quick-actions {
@@ -24,7 +27,7 @@
     justify-content: space-around;
     margin-top: 0;
     flex-shrink: 0;
-    height: 120px;
+    height: 80px;
     padding: 0 2rem;
 
     .quick-action-canvas {
@@ -35,22 +38,23 @@
       padding: 0;
       border-radius: 0;
       box-shadow: none;
-      width: 100px;
-      height: 100px;
+      width: 80px;
+      height: 80px;
 
       .quick-action-button {
-        width: 60px;
-        height: 60px;
-        border-radius: 16px;
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 24px;
+        font-size: 20px;
         font-weight: 600;
-        margin-bottom: 12px;
+        margin-bottom: 3px;
         border: none;
         cursor: pointer;
         transition: all 0.2s ease;
+        padding: 6px;
 
         &.btn--primary {
           background-color: #ff6b6b;
@@ -100,14 +104,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    padding: 1rem 1rem 8px;
     flex-shrink: 0;
   }
 
   &__main {
     flex: 1;
-    padding: 1rem;
-    padding-bottom: 5rem;
+    padding: 8px 1rem 65px;
     overflow: hidden;
     min-height: 0;
     display: flex;
@@ -154,7 +157,7 @@
   &__subtitle {
     font-size: 0.95rem;
     color: #666;
-    margin-top: 10px;
+    margin-top: 4px;
     margin-bottom: 10px;
     
     .highlight-text {
@@ -167,11 +170,12 @@
 .outfit-card__image {
   width: 100%;
   flex: 1;
-  min-height: 300px;
-  max-height: 60vh;
+  min-height: 0;
+  max-width: 400px;
+  margin: 0 auto 0.5rem;
+  aspect-ratio: 3/4;
   overflow: hidden;
   border-radius: 16px;
-  margin-bottom: 1rem;
   background-color: #f8f9fa;
   border: 1px solid #e9ecef;
   display: flex;
@@ -184,6 +188,22 @@
     object-fit: cover;
     object-position: center;
   }
+
+  // 响应式断点
+  @media (max-width: 480px) {
+    max-width: 90vw;
+    aspect-ratio: 3/4;
+  }
+
+  @media (min-width: 481px) and (max-width: 768px) {
+    max-width: 350px;
+    aspect-ratio: 3/4;
+  }
+
+  @media (min-width: 769px) {
+    max-width: 400px;
+    aspect-ratio: 3/4;
+  }
 }
 
 .outfit-card__actions {
@@ -191,7 +211,7 @@
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  height: 80px;
+  height: 65px;
   margin-bottom: 5px;
 }
 
