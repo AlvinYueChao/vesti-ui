@@ -7,6 +7,14 @@ import '../styles/wardrobe-page.scss';
 import '../styles/onboarding.scss';
 import '../styles/scenario-selection.scss';
 import '../styles/outfit-result.scss';
+import '../styles/discover-page.scss';
+import '../styles/profile-page.scss';
+import '../styles/outfit-diary.scss';
+import '../styles/outfit-detail.scss';
+import '../styles/outfit-detail.scss';
+import '../styles/outfit-detail.scss';
+import '../styles/outfit-detail.scss';
+import '../styles/article-detail.scss';
 import type { AppProps } from 'next/app';
 
 function MyApp({ Component, pageProps }: AppProps) {

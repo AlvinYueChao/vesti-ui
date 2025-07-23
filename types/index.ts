@@ -85,6 +85,28 @@ export interface NavigationTab {
   path?: string;
 }
 
+export interface Article {
+  id: string;
+  title: string;
+  summary: string;
+  thumbnail: string;
+  readCount: string;
+  category: string;
+  isBookmarked: boolean;
+  content?: string;
+  author?: string;
+  publishDate?: Date;
+  tags?: string[];
+}
+
+export interface BannerData {
+  id: string;
+  title: string;
+  subtitle: string;
+  image: string;
+  link?: string;
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   data?: T;

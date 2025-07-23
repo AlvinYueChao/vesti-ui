@@ -1,0 +1,355 @@
+.discover-page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding-bottom: 5rem; // Space for bottom navigation
+
+  &__header {
+    background-color: white;
+    padding: 1rem;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+
+  &__content {
+    padding: 1rem;
+  }
+}
+
+.banner-card {
+  background: linear-gradient(135deg, #B794F6 0%, #9F7AEA 100%);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  color: white;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &__content {
+    position: relative;
+    z-index: 2;
+  }
+
+  &__icons {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    
+    span {
+      width: 20px;
+      height: 20px;
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: white;
+    }
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+  }
+
+  &__subtitle {
+    font-size: 0.875rem;
+    opacity: 0.9;
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+.content-section {
+  margin-bottom: 2rem;
+
+  &__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 1rem 0;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+.article-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &__thumbnail {
+    width: 70px;
+    height: 70px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  &__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    padding: 4px;
+    
+    span {
+      width: 12px;
+      height: 12px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.5rem;
+      font-weight: bold;
+      color: #666;
+    }
+  }
+
+  // Different colors for different articles
+  &:nth-child(1) &__placeholder {
+    background-color: #FFB5B5;
+  }
+
+  &:nth-child(2) &__placeholder {
+    background-color: #B5E7FF;
+  }
+
+  &:nth-child(3) &__placeholder {
+    background-color: #FFE5B5;
+  }
+
+  &:nth-child(4) &__placeholder {
+    background-color: #E5B5FF;
+  }
+
+  &__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 70px;
+  }
+
+  &__category {
+    font-size: 0.75rem;
+    color: #999;
+    margin-bottom: 0.25rem;
+  }
+
+  &__title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 auto 0;
+    line-height: 1.4;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+
+  &__read-count {
+    font-size: 0.75rem;
+    color: #999;
+  }
+
+  &__bookmark {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    &:hover {
+      background-color: rgba(255, 107, 107, 0.1);
+      transform: scale(1.1);
+    }
+
+    &--active {
+      &:hover {
+        background-color: rgba(255, 107, 107, 0.2);
+      }
+      
+      svg path {
+        fill: #FF6B6B !important;
+        stroke: #FF6B6B !important;
+      }
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      
+      path {
+        fill: none;
+        stroke: #999;
+        stroke-width: 1.5;
+        transition: all 0.2s ease;
+      }
+    }
+
+    // 添加一个小的动画效果
+    &--active svg {
+      animation: bookmarkPulse 0.3s ease-out;
+    }
+  }
+
+  @keyframes bookmarkPulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 480px) {
+  .discover-page {
+    &__header {
+      padding: 0.75rem 1rem;
+    }
+
+    &__title {
+      font-size: 1rem;
+    }
+
+    &__content {
+      padding: 0.75rem;
+    }
+  }
+
+  .banner-card {
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    border-radius: 12px;
+
+    &__icons {
+      gap: 0.2rem;
+      
+      span {
+        width: 18px;
+        height: 18px;
+        font-size: 0.6rem;
+      }
+    }
+
+    &__title {
+      font-size: 1rem;
+    }
+
+    &__subtitle {
+      font-size: 0.8rem;
+    }
+  }
+
+  .content-section {
+    margin-bottom: 1.5rem;
+
+    &__title {
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    &__content {
+      gap: 0.5rem;
+    }
+  }
+
+  .article-card {
+    padding: 0.75rem;
+    gap: 0.5rem;
+
+    &__thumbnail {
+      width: 60px;
+      height: 60px;
+    }
+
+    &__placeholder {
+      padding: 3px;
+      gap: 1px;
+      
+      span {
+        width: 10px;
+        height: 10px;
+        font-size: 0.45rem;
+      }
+    }
+
+    &__content {
+      min-height: 60px;
+    }
+
+    &__category {
+      font-size: 0.7rem;
+    }
+
+    &__title {
+      font-size: 0.85rem;
+    }
+
+    &__read-count {
+      font-size: 0.7rem;
+    }
+
+    &__bookmark {
+      padding: 0.2rem;
+      
+      svg {
+        width: 12px;
+        height: 12px;
+      }
+    }
+  }
+}

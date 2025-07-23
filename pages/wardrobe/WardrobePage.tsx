@@ -86,16 +86,7 @@ export const WardrobePage: React.FC = () => {
 
   return (
     <div className="wardrobe-page">
-      <header className="wardrobe-page__header">
-        {isSelectMode && (
-          <button className="back-button" onClick={handleBack}>
-            <img src="/assets/icons/actions/chevron-left.svg" alt="返回" />
-          </button>
-        )}
-        <h1 className="wardrobe-page__title">
-          {isSelectMode ? '选择要搭配的单品' : '智能衣橱'}
-        </h1>
-      </header>
+
 
       <CategoryFilter
         categories={categories}

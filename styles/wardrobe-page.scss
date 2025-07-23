@@ -84,7 +84,7 @@
   &__scroll {
     display: flex;
     gap: 0.5rem;
-    padding: 0.25rem 1rem; // Match the grid padding for alignment
+    padding: 0.5rem 1rem 0.25rem 1rem; // Set top padding to 8px (0.5rem)
     min-width: min-content; // Ensure container is wide enough for all items
   }
 
@@ -123,9 +123,23 @@
 
 .wardrobe-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 1rem;
   padding: 0 1rem; // Add horizontal padding back to grid
+  
+  // Responsive grid columns based on screen width
+  grid-template-columns: repeat(2, 1fr); // Default: 2 columns for mobile
+  
+  @media (min-width: 480px) {
+    grid-template-columns: repeat(3, 1fr); // 3 columns for small tablets
+  }
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(4, 1fr); // 4 columns for tablets
+  }
+  
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(5, 1fr); // 5 columns for desktop
+  }
 }
 
 .wardrobe-item {
@@ -134,8 +148,9 @@
 
   &__image {
     width: 100%;
-    height: 150px;
+    aspect-ratio: 1; // Square aspect ratio for clothing items
     overflow: hidden;
+    border-radius: 8px;
 
     img {
       width: 100%;
@@ -195,8 +210,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 220px; // Adjust to match item height
+    aspect-ratio: 1; // Match the image aspect ratio
     border: 2px dashed #ccc;
+    border-radius: 8px;
   }
 
   &__placeholder-icon {
