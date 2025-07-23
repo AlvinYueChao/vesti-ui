@@ -44,8 +44,7 @@ const ProfilePage: React.FC = () => {
       icon: '⚙️',
       color: '#45B7D1',
       onClick: () => {
-        // TODO: 跳转到偏好设置页面
-        console.log('Navigate to preferences');
+        router.push('/preferences');
       }
     },
     {
@@ -54,8 +53,7 @@ const ProfilePage: React.FC = () => {
       icon: '❓',
       color: '#96CEB4',
       onClick: () => {
-        // TODO: 跳转到帮助与反馈页面
-        console.log('Navigate to help & feedback');
+        router.push('/preferences/help-feedback');
       }
     }
   ];

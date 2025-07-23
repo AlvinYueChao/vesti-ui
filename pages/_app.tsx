@@ -11,6 +11,7 @@ import '../styles/discover-page.scss';
 import '../styles/profile-page.scss';
 import '../styles/outfit-diary.scss';
 import '../styles/outfit-detail.scss';
+import '../styles/preferences.scss';
 import '../styles/outfit-detail.scss';
 import '../styles/outfit-detail.scss';
 import '../styles/outfit-detail.scss';
