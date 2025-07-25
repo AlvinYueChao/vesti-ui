@@ -1,138 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-
-interface ClothingItem {
-  id: string;
-  name: string;
-  category: string;
-  color: string;
-  material: string;
-  image: string;
-}
-
-interface OutfitDetail {
-  id: string;
-  date: string;
-  dayOfWeek: string;
-  weather: {
-    location: string;
-    temperature: string;
-    condition: string;
-  };
-  image: string;
-  aiDesignerNote: string;
-  items: ClothingItem[];
-}
+import { useOutfitDiary, OutfitRecord } from '../../../hooks/useOutfitDiary';
 
 const OutfitDetailPage: React.FC = () => {
   const router = useRouter();
-  const [outfitDetail, setOutfitDetail] = useState<OutfitDetail | null>(null);
+  const [outfitDetail, setOutfitDetail] = useState<OutfitRecord | null>(null);
   const [loading, setLoading] = useState(true);
   
   // 从路由参数获取outfitId
   const { id: outfitId } = router.query;
-
-  // Mock data - 在实际应用中这里会从API获取数据
-  const mockOutfitDetails: Record<string, OutfitDetail> = {
-    '1': {
-      id: '1',
-      date: '2025-07-09',
-      dayOfWeek: '星期三',
-      weather: {
-        location: '上海',
-        temperature: '29°C',
-        condition: '晴'
-      },
-      image: '/assets/images/outfit-detail-1.jpg',
-      aiDesignerNote: '蓝色衬衫与白色短裤的组合，在炎热的夏日带来一丝清凉，是经典的休闲搭配。草编包的点缀增添了度假氛围。',
-      items: [
-        {
-          id: 'item-1',
-          name: '条纹衬衫',
-          category: '上装',
-          color: '蓝色',
-          material: '棉',
-          image: '/assets/images/item-1.jpg'
-        },
-        {
-          id: 'item-2',
-          name: '白色短裤',
-          category: '下装',
-          color: '白色',
-          material: '棉',
-          image: '/assets/images/item-2.jpg'
-        },
-        {
-          id: 'item-3',
-          name: '草编包',
-          category: '配饰',
-          color: '黄色',
-          material: '草编',
-          image: '/assets/images/item-3.jpg'
-        }
-      ]
-    },
-    '2': {
-      id: '2',
-      date: '2025-07-03',
-      dayOfWeek: '星期四',
-      weather: {
-        location: '上海',
-        temperature: '32°C',
-        condition: '多云'
-      },
-      image: '/assets/images/outfit-detail-2.jpg',
-      aiDesignerNote: '粉色上衣与黑色下装的经典搭配，既保持了女性的柔美，又不失职场的专业感。适合夏日办公室穿着。',
-      items: [
-        {
-          id: 'item-4',
-          name: '粉色衬衫',
-          category: '上装',
-          color: '粉色',
-          material: '丝绸',
-          image: '/assets/images/item-4.jpg'
-        },
-        {
-          id: 'item-5',
-          name: '黑色西装裤',
-          category: '下装',
-          color: '黑色',
-          material: '聚酯纤维',
-          image: '/assets/images/item-5.jpg'
-        }
-      ]
-    },
-    '3': {
-      id: '3',
-      date: '2025-07-23',
-      dayOfWeek: '星期三',
-      weather: {
-        location: '上海',
-        temperature: '28°C',
-        condition: '晴'
-      },
-      image: '/assets/images/outfit-detail-3.jpg',
-      aiDesignerNote: '红白配色经典而醒目，适合需要展现活力和自信的场合。简洁的设计让整体造型更加干净利落。',
-      items: [
-        {
-          id: 'item-6',
-          name: '红色T恤',
-          category: '上装',
-          color: '红色',
-          material: '棉',
-          image: '/assets/images/item-6.jpg'
-        },
-        {
-          id: 'item-7',
-          name: '白色牛仔裤',
-          category: '下装',
-          color: '白色',
-          material: '牛仔布',
-          image: '/assets/images/item-7.jpg'
-        }
-      ]
-    }
-  };
+  
+  // 使用穿搭日记hook
+  const { records, deleteOutfitRecord } = useOutfitDiary('user-123');
 
   useEffect(() => {
     // 确保outfitId存在且为字符串
@@ -141,17 +20,15 @@ const OutfitDetailPage: React.FC = () => {
       return;
     }
 
-    // 模拟API调用
+    // 从记录中查找对应的穿搭详情
     const loadOutfitDetail = () => {
-      setTimeout(() => {
-        const detail = mockOutfitDetails[outfitId];
-        setOutfitDetail(detail || null);
-        setLoading(false);
-      }, 500);
+      const detail = records.find(record => record.id === outfitId);
+      setOutfitDetail(detail || null);
+      setLoading(false);
     };
 
     loadOutfitDetail();
-  }, [outfitId]);
+  }, [outfitId, records]);
 
   const handleBack = () => {
     router.back();
@@ -191,16 +68,20 @@ const OutfitDetailPage: React.FC = () => {
     router.push(`/wardrobe/item/${itemId}`);
   };
 
-  const handleDeleteRecord = () => {
-    const confirmMessage = `确定要删除 ${new Date(outfitDetail?.date || '').getMonth() + 1}月${new Date(outfitDetail?.date || '').getDate()}日 的穿搭记录吗？\n\n删除后将无法恢复。`;
+  const handleDeleteRecord = async () => {
+    if (!outfitDetail || !outfitId) return;
+    
+    const confirmMessage = `确定要删除 ${new Date(outfitDetail.date).getMonth() + 1}月${new Date(outfitDetail.date).getDate()}日 的穿搭记录吗？\n\n删除后将无法恢复。`;
     
     if (confirm(confirmMessage)) {
-      // 这里应该调用API删除记录
-      console.log('删除记录:', outfitId);
-      
-      // 模拟删除成功
-      alert('穿搭记录已删除');
-      router.back();
+      try {
+        await deleteOutfitRecord(outfitId as string);
+        alert('穿搭记录已删除');
+        router.back();
+      } catch (error) {
+        console.error('删除记录失败:', error);
+        alert('删除失败，请重试');
+      }
     }
   };
 
@@ -274,7 +155,9 @@ const OutfitDetailPage: React.FC = () => {
         {/* AI设计师说 */}
         <div className="outfit-detail-page__ai-note">
           <h3 className="outfit-detail-page__ai-note-title">AI设计师说：</h3>
-          <p className="outfit-detail-page__ai-note-content">{outfitDetail.aiDesignerNote}</p>
+          <p className="outfit-detail-page__ai-note-content">
+            {outfitDetail.aiDesignerNote || outfitDetail.aiComment || '这是一套精心搭配的组合。'}
+          </p>
         </div>
 
         {/* 套装单品列表 */}

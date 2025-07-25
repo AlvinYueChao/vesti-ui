@@ -1,70 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-
-interface OutfitRecord {
-  id: string;
-  date: string;
-  dayOfWeek: string;
-  weather: {
-    location: string;
-    temperature: string;
-    condition: string;
-  };
-  colors: string[];
-  image: string;
-  description?: string;
-}
+import { useOutfitDiary, OutfitRecord } from '../../../hooks/useOutfitDiary';
 
 type ViewMode = 'list' | 'calendar';
 
 const OutfitDiaryPage: React.FC = () => {
   const router = useRouter();
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [currentMonth, setCurrentMonth] = useState(new Date(2025, 6)); // 2025年7月
+  const [currentMonth, setCurrentMonth] = useState(new Date()); // 使用当前日期
+  
+  const { records: outfitRecords, loading, error, refreshDiary } = useOutfitDiary('user-123');
 
-
-  // Mock data
-  const outfitRecords: OutfitRecord[] = [
-    {
-      id: '1',
-      date: '2025-07-09',
-      dayOfWeek: '星期三',
-      weather: {
-        location: '上海',
-        temperature: '29°C',
-        condition: '晴'
-      },
-      colors: ['#87CEEB', '#D3D3D3', '#FFD700'],
-      image: '/assets/images/outfit-diary-1.jpg',
-      description: '清爽的夏日搭配'
-    },
-    {
-      id: '2',
-      date: '2025-07-03',
-      dayOfWeek: '星期四',
-      weather: {
-        location: '上海',
-        temperature: '32°C',
-        condition: '多云'
-      },
-      colors: ['#FFB6C1', '#000000'],
-      image: '/assets/images/outfit-diary-2.jpg',
-      description: '简约职场风格'
-    },
-    {
-      id: '3',
-      date: '2025-07-23',
-      dayOfWeek: '星期三',
-      weather: {
-        location: '上海',
-        temperature: '28°C',
-        condition: '晴'
-      },
-      colors: ['#FF6B6B', '#FFFFFF'],
-      image: '/assets/images/outfit-diary-3.jpg',
-      description: '活力红白搭配'
+  // 当组件挂载时，检查是否需要刷新数据
+  useEffect(() => {
+    // 如果从搭配结果页面跳转过来，刷新数据
+    if (router.query.refresh === 'true') {
+      // 使用 setTimeout 来避免渲染冲突
+      const timer = setTimeout(() => {
+        refreshDiary();
+      }, 100);
+      
+      return () => clearTimeout(timer);
     }
-  ];
+  }, [router.query.refresh]);
 
   const handleBack = () => {
     router.back();
@@ -97,6 +55,22 @@ const OutfitDiaryPage: React.FC = () => {
   };
 
   const currentMonthRecords = getRecordsForMonth(currentMonth);
+
+  if (loading) {
+    return (
+      <div className="outfit-diary-page loading">
+        <div className="loading-spinner">加载中...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="outfit-diary-page error">
+        <div className="error-message">加载失败: {error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="outfit-diary-page">

@@ -287,6 +287,53 @@ class OutfitService {
     };
   }
 
+  // 从衣橱中为场景生成搭配（支持锁定单品）
+  generateScenarioOutfitWithLocked(scenarioId: string, wardrobeItems: ClothingItem[], lockedItems: OutfitItem[], currentItems: OutfitItem[] = []): OutfitRecommendation {
+    const requiredCategories = SCENARIO_REQUIREMENTS[scenarioId] || ['tops', 'bottoms', 'shoes'];
+    const selectedItems: OutfitItem[] = [...lockedItems]; // 保留锁定的单品
+    const missingCategories: string[] = [];
+    
+    // 获取已锁定单品的类别
+    const lockedCategories = lockedItems.map(item => item.category);
+    
+    // 获取当前搭配中的单品ID，用于排除
+    const currentItemIds = currentItems.map(item => item.id);
+
+    // 尝试从衣橱中选择未锁定类别的单品
+    for (const category of requiredCategories) {
+      if (lockedCategories.includes(category)) {
+        // 该类别已有锁定单品，跳过
+        continue;
+      }
+
+      const categoryItems = wardrobeItems.filter(item => item.category === category);
+      
+      if (categoryItems.length > 0) {
+        // 排除当前搭配中的单品，选择不同的单品
+        const selectedItem = this.selectBestItemForScenario(categoryItems, scenarioId, currentItemIds);
+        selectedItems.push({
+          id: selectedItem.id,
+          name: selectedItem.name,
+          image: selectedItem.imageUrl,
+          category: selectedItem.category,
+          isFromWardrobe: true
+        });
+      } else {
+        missingCategories.push(category);
+      }
+    }
+
+    // 计算完整度
+    const completeness = selectedItems.length / requiredCategories.length;
+
+    return {
+      items: selectedItems,
+      completeness,
+      missingCategories,
+      hasNetworkImages: false
+    };
+  }
+
   // 基于选中单品生成搭配
   generateItemBasedOutfit(selectedItem: ClothingItem, wardrobeItems: ClothingItem[]): OutfitRecommendation {
     const selectedOutfitItem: OutfitItem = {
@@ -332,11 +379,88 @@ class OutfitService {
     };
   }
 
+  // 基于选中单品生成搭配（支持锁定单品）
+  generateItemBasedOutfitWithLocked(selectedItem: ClothingItem, wardrobeItems: ClothingItem[], lockedItems: OutfitItem[], currentItems: OutfitItem[] = []): OutfitRecommendation {
+    // 检查锁定单品中是否包含选中的单品
+    const isSelectedItemLocked = lockedItems.some(item => item.id === selectedItem.id);
+    
+    let complementaryItems: OutfitItem[];
+    if (isSelectedItemLocked) {
+      // 如果选中的单品已被锁定，则保留所有锁定单品
+      complementaryItems = [...lockedItems];
+    } else {
+      // 如果选中的单品未被锁定，添加到搭配中
+      const selectedOutfitItem: OutfitItem = {
+        id: selectedItem.id,
+        name: selectedItem.name,
+        image: selectedItem.imageUrl,
+        category: selectedItem.category,
+        isFromWardrobe: true
+      };
+      complementaryItems = [selectedOutfitItem, ...lockedItems.filter(item => item.id !== selectedItem.id)];
+    }
+
+    const neededCategories = this.getComplementaryCategories(selectedItem.category as ClothingCategory);
+    const missingCategories: string[] = [];
+    
+    // 获取已有单品的类别（包括选中的和锁定的）
+    const existingCategories = complementaryItems.map(item => item.category);
+    
+    // 获取当前搭配中的单品ID，用于排除
+    const currentItemIds = currentItems.map(item => item.id);
+
+    // 为每个需要但缺失的类别选择搭配单品
+    for (const category of neededCategories) {
+      if (existingCategories.includes(category)) {
+        // 该类别已有单品，跳过
+        continue;
+      }
+
+      const categoryItems = wardrobeItems.filter(item => 
+        item.category === category && 
+        item.id !== selectedItem.id &&
+        !lockedItems.some(lockedItem => lockedItem.id === item.id)
+      );
+      
+      if (categoryItems.length > 0) {
+        // 排除当前搭配中的单品，选择不同的单品
+        const complementaryItem = this.selectComplementaryItem(categoryItems, selectedItem, currentItemIds);
+        complementaryItems.push({
+          id: complementaryItem.id,
+          name: complementaryItem.name,
+          image: complementaryItem.imageUrl,
+          category: complementaryItem.category,
+          isFromWardrobe: true
+        });
+      } else {
+        missingCategories.push(category);
+      }
+    }
+
+    const totalNeeded = neededCategories.length + 1; // +1 for the selected item
+    const completeness = complementaryItems.length / totalNeeded;
+
+    return {
+      items: complementaryItems,
+      completeness,
+      missingCategories,
+      hasNetworkImages: false
+    };
+  }
+
   // 选择最适合场景的单品
-  private selectBestItemForScenario(items: ClothingItem[], scenarioId: string): ClothingItem {
+  private selectBestItemForScenario(items: ClothingItem[], scenarioId: string, excludeIds: string[] = []): ClothingItem {
+    // 过滤掉需要排除的单品
+    const availableItems = items.filter(item => !excludeIds.includes(item.id));
+    
+    if (availableItems.length === 0) {
+      // 如果没有可用的单品，返回第一个
+      return items[0];
+    }
+    
     // 这里可以实现更复杂的选择逻辑，比如根据颜色、风格等
     // 目前简化为随机选择
-    return items[Math.floor(Math.random() * items.length)];
+    return availableItems[Math.floor(Math.random() * availableItems.length)];
   }
 
   // 获取互补的类别
@@ -358,10 +482,18 @@ class OutfitService {
   }
 
   // 选择互补的单品
-  private selectComplementaryItem(items: ClothingItem[], selectedItem: ClothingItem): ClothingItem {
+  private selectComplementaryItem(items: ClothingItem[], selectedItem: ClothingItem, excludeIds: string[] = []): ClothingItem {
+    // 过滤掉需要排除的单品
+    const availableItems = items.filter(item => !excludeIds.includes(item.id));
+    
+    if (availableItems.length === 0) {
+      // 如果没有可用的单品，返回第一个
+      return items[0];
+    }
+    
     // 这里可以实现颜色搭配、风格匹配等逻辑
     // 目前简化为随机选择
-    return items[Math.floor(Math.random() * items.length)];
+    return availableItems[Math.floor(Math.random() * availableItems.length)];
   }
 
   // 生成AI评论
