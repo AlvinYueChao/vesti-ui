@@ -8,6 +8,8 @@ interface OutfitItem {
   name: string;
   image: string;
   category: string;
+  isFromWardrobe?: boolean;
+  isNetworkImage?: boolean;
 }
 
 interface OutfitResultPageProps {
@@ -76,6 +78,12 @@ export const OutfitResultPage: React.FC<OutfitResultPageProps> = ({
               <div key={item.id} className="outfit-item">
                 <div className="outfit-item__image">
                   <img src={item.image} alt={item.name} />
+                  {item.isNetworkImage && (
+                    <div className="outfit-item__network-badge">网图</div>
+                  )}
+                  {item.isFromWardrobe && (
+                    <div className="outfit-item__wardrobe-badge">衣橱</div>
+                  )}
                 </div>
               </div>
             ))}

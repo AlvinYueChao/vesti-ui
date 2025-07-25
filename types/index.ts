@@ -21,12 +21,13 @@ export interface ClothingItem {
   color: string;
   brand?: string;
   image: string;
+  imageUrl: string;
   tags: string[];
   addedDate: Date;
   lastWorn?: Date;
 }
 
-export type ClothingCategory = 'tops' | 'bottoms' | 'shoes' | 'accessories';
+export type ClothingCategory = 'tops' | 'bottoms' | 'shoes' | 'accessories' | 'outerwear';
 
 export interface OutfitRecommendation {
   id: string;

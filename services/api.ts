@@ -15,6 +15,7 @@ class ApiService {
       color: '蓝白',
       brand: 'UNIQLO',
       image: '/assets/images/striped-shirt.jpg',
+      imageUrl: '/assets/images/striped-shirt.jpg',
       tags: ['休闲', '经典'],
       addedDate: new Date('2024-01-15')
     },
@@ -25,6 +26,7 @@ class ApiService {
       color: '白色',
       brand: 'H&M',
       image: '/assets/images/white-tee.jpg',
+      imageUrl: '/assets/images/white-tee.jpg',
       tags: ['基础款', '百搭'],
       addedDate: new Date('2024-01-20')
     },
@@ -35,6 +37,7 @@ class ApiService {
       color: '深蓝',
       brand: 'Levi\'s',
       image: '/assets/images/jeans.jpg',
+      imageUrl: '/assets/images/jeans.jpg',
       tags: ['经典', '耐穿'],
       addedDate: new Date('2024-01-10')
     },
@@ -45,6 +48,7 @@ class ApiService {
       color: '白色',
       brand: 'Adidas',
       image: '/assets/images/white-sneakers.jpg',
+      imageUrl: '/assets/images/white-sneakers.jpg',
       tags: ['运动', '百搭'],
       addedDate: new Date('2024-01-25')
     },
@@ -55,6 +59,7 @@ class ApiService {
       color: '黑色',
       brand: 'ZARA',
       image: '/assets/images/black-pants.jpg',
+      imageUrl: '/assets/images/black-pants.jpg',
       tags: ['正式', '商务'],
       addedDate: new Date('2024-02-01')
     },
@@ -65,6 +70,7 @@ class ApiService {
       color: '花色',
       brand: 'Hermès',
       image: '/assets/images/silk-scarf.jpg',
+      imageUrl: '/assets/images/silk-scarf.jpg',
       tags: ['优雅', '配饰'],
       addedDate: new Date('2024-02-05')
     }
