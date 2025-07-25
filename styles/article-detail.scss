@@ -1,0 +1,116 @@
+.article-detail {
+  min-height: 100vh;
+  background-color: white;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 100;
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+    flex: 1;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  &__content {
+    padding: 1.5rem;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  &__category {
+    font-size: 0.875rem;
+    color: var(--red-primary);
+    background-color: rgba(255, 90, 95, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-weight: 500;
+  }
+
+  &__read-count {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+
+  &__body {
+    line-height: 1.6;
+    color: var(--text-color);
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 2rem 0 1rem 0;
+      color: var(--text-color);
+    }
+
+    h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.75rem 0;
+      color: var(--text-color);
+    }
+
+    p {
+      margin: 0 0 1rem 0;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 1.5rem;
+
+      li {
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+}
+
+// Back button style is now global in components.scss
+
+.bookmark-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+
+  &--active {
+    svg path {
+      fill: var(--red-primary);
+      stroke: var(--red-primary);
+    }
+  }
+
+  svg {
+    transition: all 0.2s ease;
+  }
+}

@@ -67,7 +67,7 @@ const HomePage: React.FC = () => {
         router.push('/discover');
         break;
       case 'profile':
-        router.push('/profile');
+        router.push('/user/profile');
         break;
       default:
         break;
@@ -81,7 +81,7 @@ const HomePage: React.FC = () => {
 
   const handleScenarioStyling = () => {
     // Navigate to scenario selection page
-    router.push('/scenario-selection');
+    router.push('/outfit/scenario-selection');
   };
 
   const currentOutfit = recommendations[currentOutfitIndex];

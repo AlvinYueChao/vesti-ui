@@ -1,0 +1,356 @@
+.profile-page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding-bottom: 80px; // 为底部导航留出空间
+
+  &__header {
+    background-color: white;
+    padding: 2rem 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  &__user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #ffeaa7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  &__avatar-placeholder {
+    font-size: 1.5rem;
+  }
+
+  &__user-details {
+    flex: 1;
+  }
+
+  &__username {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 0.25rem 0;
+  }
+
+  &__stats {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  &__section {
+    margin-bottom: 1rem;
+  }
+
+  &__menu-list {
+    background-color: white;
+    border-radius: 0.5rem;
+    margin: 0 1rem;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  &__menu-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background-color: #f8f9fa;
+    }
+
+    &:active {
+      background-color: #e9ecef;
+    }
+  }
+
+  &__menu-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+
+    span {
+      font-size: 1.125rem;
+    }
+  }
+
+  &__menu-title {
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-color);
+  }
+
+  &__menu-arrow {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+  }
+}
+
+// 收藏页面样式
+.favorites-page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+
+  &__header {
+    background-color: white;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    .back-button {
+      background: none;
+      border: none;
+      padding: 0.5rem;
+      margin-right: 1rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      border-radius: 50%;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+
+      &:active {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+
+      img {
+        width: 24px;
+        height: 24px;
+        display: block;
+      }
+
+      span {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        display: none;
+      }
+    }
+  }
+
+  &__back-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+  }
+
+  &__content {
+    padding: 1rem;
+  }
+
+  &__loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 3rem 2rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+  }
+
+  &__empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  &__empty-text {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--text-color);
+    margin: 0 0 0.5rem 0;
+  }
+
+  &__empty-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0 0 2rem 0;
+  }
+
+  &__discover-btn {
+    background-color: var(--red-primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: var(--red-hover);
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__item {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  &__item-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__item-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__item-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__item-description {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__item-meta {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+  }
+
+  &__item-category {
+    font-size: 0.75rem;
+    color: var(--red-primary);
+    background-color: rgba(255, 90, 95, 0.1);
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+    font-weight: 500;
+  }
+
+  &__item-date {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  &__remove-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(0, 0, 0, 0.1);
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+
+    &:hover {
+      background: rgba(255, 90, 95, 0.1);
+      color: var(--red-primary);
+    }
+  }
+
+  &__item:hover &__remove-btn {
+    opacity: 1;
+  }
+}

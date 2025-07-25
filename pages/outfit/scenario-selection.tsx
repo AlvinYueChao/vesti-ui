@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { ScenarioOption } from '../types';
+import { ScenarioOption } from '../../types';
 
 const ScenarioSelectionPage: React.FC = () => {
   const router = useRouter();
@@ -57,7 +57,7 @@ const ScenarioSelectionPage: React.FC = () => {
     
     // Navigate to outfit result page with scenario data
     router.push({
-      pathname: '/outfit-result',
+      pathname: '/outfit/result',
       query: {
         type: 'scenario',
         scenarioId: scenarioId,
@@ -74,7 +74,11 @@ const ScenarioSelectionPage: React.FC = () => {
     <div className="scenario-selection-page">
       <header className="scenario-selection__header">
         <button className="back-button" onClick={handleBack}>
-          <img src="/assets/icons/actions/chevron-left.svg" alt="返回" />
+          <img src="/assets/icons/actions/chevron-left.svg" alt="返回" onError={(e) => {
+            e.currentTarget.style.display = 'none';
+            e.currentTarget.nextElementSibling.style.display = 'inline';
+          }} />
+          <span style={{display: 'none'}}>←</span>
         </button>
         <h1 className="page-title">选择场景</h1>
       </header>

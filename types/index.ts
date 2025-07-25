@@ -21,12 +21,13 @@ export interface ClothingItem {
   color: string;
   brand?: string;
   image: string;
+  imageUrl: string;
   tags: string[];
   addedDate: Date;
   lastWorn?: Date;
 }
 
-export type ClothingCategory = 'tops' | 'bottoms' | 'shoes' | 'accessories';
+export type ClothingCategory = 'tops' | 'bottoms' | 'shoes' | 'accessories' | 'outerwear';
 
 export interface OutfitRecommendation {
   id: string;
@@ -83,6 +84,28 @@ export interface NavigationTab {
   label: string;
   icon: string;
   path?: string;
+}
+
+export interface Article {
+  id: string;
+  title: string;
+  summary: string;
+  thumbnail: string;
+  readCount: string;
+  category: string;
+  isBookmarked: boolean;
+  content?: string;
+  author?: string;
+  publishDate?: Date;
+  tags?: string[];
+}
+
+export interface BannerData {
+  id: string;
+  title: string;
+  subtitle: string;
+  image: string;
+  link?: string;
 }
 
 export interface ApiResponse<T> {

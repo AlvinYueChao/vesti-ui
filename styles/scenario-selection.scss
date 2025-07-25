@@ -13,18 +13,7 @@
     top: 0;
     z-index: 10;
 
-    .back-button {
-      background: none;
-      border: none;
-      padding: 0.5rem;
-      margin-right: 1rem;
-      cursor: pointer;
-
-      img {
-        width: 24px;
-        height: 24px;
-      }
-    }
+    // Back button style is now global in components.scss
 
     .page-title {
       font-size: 1.25rem;
