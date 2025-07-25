@@ -80,7 +80,7 @@ const OutfitDiaryPage: React.FC = () => {
 
   const handleRecordClick = (record: OutfitRecord) => {
     // 跳转到穿搭详情页面
-    router.push(`/outfit-detail?id=${record.id}`);
+    router.push(`/outfit/detail?id=${record.id}`);
   };
 
   const formatMonth = (date: Date) => {

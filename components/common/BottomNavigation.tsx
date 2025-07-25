@@ -20,7 +20,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
     { id: 'home', label: '首页', icon: 'home', path: '/home' },
     { id: 'wardrobe', label: '衣橱', icon: 'wardrobe', path: '/wardrobe' },
     { id: 'discover', label: '发现', icon: 'discover', path: '/discover' },
-    { id: 'profile', label: '我的', icon: 'profile', path: '/profile' },
+    { id: 'profile', label: '我的', icon: 'profile', path: '/user/profile' },
   ];
 
   return (

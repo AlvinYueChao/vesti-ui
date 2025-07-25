@@ -60,7 +60,7 @@ const PreferencesPage: React.FC = () => {
   };
 
   const handleStyleLabelsClick = () => {
-    router.push('/preferences/style-labels');
+    router.push('/user/preferences/style-labels');
   };
 
   const handleRetakeStyleTest = () => {
@@ -70,7 +70,7 @@ const PreferencesPage: React.FC = () => {
   };
 
   const handleBlockedItemsClick = () => {
-    router.push('/preferences/blocked-items');
+    router.push('/user/preferences/blocked-items');
   };
 
   const handleToggleDailyPush = () => {
@@ -90,7 +90,7 @@ const PreferencesPage: React.FC = () => {
   };
 
   const handleHelpFeedbackClick = () => {
-    router.push('/preferences/help-feedback');
+    router.push('/user/preferences/help-feedback');
   };
 
   const handleSaveSettings = async () => {

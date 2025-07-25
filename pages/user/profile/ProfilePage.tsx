@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { BottomNavigation } from '../../components/common/BottomNavigation';
+import { BottomNavigation } from '../../../components/common/BottomNavigation';
 
 interface MenuItem {
   id: string;
@@ -22,7 +22,7 @@ const ProfilePage: React.FC = () => {
       icon: '📅',
       color: '#FF6B6B',
       onClick: () => {
-        router.push('/outfit-diary');
+        router.push('/outfit/diary');
       }
     },
     {
@@ -31,7 +31,7 @@ const ProfilePage: React.FC = () => {
       icon: '🔖',
       color: '#4ECDC4',
       onClick: () => {
-        router.push('/profile/favorites');
+        router.push('/user/profile/favorites');
       }
     }
   ];
@@ -44,7 +44,7 @@ const ProfilePage: React.FC = () => {
       icon: '⚙️',
       color: '#45B7D1',
       onClick: () => {
-        router.push('/preferences');
+        router.push('/user/preferences');
       }
     },
     {
@@ -53,7 +53,7 @@ const ProfilePage: React.FC = () => {
       icon: '❓',
       color: '#96CEB4',
       onClick: () => {
-        router.push('/preferences/help-feedback');
+        router.push('/user/preferences/help-feedback');
       }
     }
   ];
@@ -78,7 +78,7 @@ const ProfilePage: React.FC = () => {
         router.push('/discover');
         break;
       case 'profile':
-        router.push('/profile');
+        router.push('/user/profile');
         break;
       default:
         break;

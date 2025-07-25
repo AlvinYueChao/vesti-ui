@@ -38,7 +38,7 @@ export const WardrobePage: React.FC = () => {
       if (item) {
         // Navigate to outfit result page with selected item
         router.push({
-          pathname: '/outfit-result',
+          pathname: '/outfit/result',
           query: {
             type: 'item-based',
             itemId: item.id,
@@ -73,7 +73,7 @@ export const WardrobePage: React.FC = () => {
         router.push('/discover');
         break;
       case 'profile':
-        router.push('/profile');
+        router.push('/user/profile');
         break;
       default:
         break;

@@ -67,7 +67,7 @@ const HomePage: React.FC = () => {
         router.push('/discover');
         break;
       case 'profile':
-        router.push('/profile');
+        router.push('/user/profile');
         break;
       default:
         break;
