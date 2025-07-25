@@ -14,6 +14,8 @@
     position: sticky;
     top: 0;
     z-index: 100;
+
+    // Back button style is now global in components.scss
   }
 
   &__back-btn {
@@ -587,9 +589,9 @@
     }
   }
 }
+
 // 帮助与反馈页
-面样式
-.help-feedback-page {
+面样式 .help-feedback-page {
   min-height: 100vh;
   background-color: #f8f9fa;
   display: flex;
@@ -605,6 +607,8 @@
     position: sticky;
     top: 0;
     z-index: 100;
+
+    // Back button style is now global in components.scss
   }
 
   &__back-btn {

@@ -102,8 +102,12 @@ const OutfitDiaryPage: React.FC = () => {
     <div className="outfit-diary-page">
       {/* 顶部导航栏 */}
       <header className="outfit-diary-page__header">
-        <button className="outfit-diary-page__back-btn" onClick={handleBack}>
-          ‹
+        <button className="back-button" onClick={handleBack}>
+          <img src="/assets/icons/actions/chevron-left.svg" alt="返回" onError={(e) => {
+            e.currentTarget.style.display = 'none';
+            e.currentTarget.nextElementSibling.style.display = 'inline';
+          }} />
+          <span style={{display: 'none'}}>←</span>
         </button>
 
         <div className="outfit-diary-page__month-nav">

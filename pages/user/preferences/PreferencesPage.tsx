@@ -89,9 +89,7 @@ const PreferencesPage: React.FC = () => {
     setHasChanges(true);
   };
 
-  const handleHelpFeedbackClick = () => {
-    router.push('/user/preferences/help-feedback');
-  };
+
 
   const handleSaveSettings = async () => {
     try {
@@ -117,8 +115,12 @@ const PreferencesPage: React.FC = () => {
     <div className="preferences-page">
       {/* 顶部导航栏 */}
       <header className="preferences-page__header">
-        <button className="preferences-page__back-btn" onClick={handleBack}>
-          ‹
+        <button className="back-button" onClick={handleBack}>
+          <img src="/assets/icons/actions/chevron-left.svg" alt="返回" onError={(e) => {
+            e.currentTarget.style.display = 'none';
+            e.currentTarget.nextElementSibling.style.display = 'inline';
+          }} />
+          <span style={{display: 'none'}}>←</span>
         </button>
         <h1 className="preferences-page__title">偏好设置</h1>
         <div className="preferences-page__header-spacer"></div>
@@ -194,18 +196,7 @@ const PreferencesPage: React.FC = () => {
           </div>
         </div>
 
-        {/* 帮助与支持区 */}
-        <div className="preferences-page__section">
-          <h2 className="preferences-page__section-title">帮助与支持</h2>
 
-          <div className="preferences-page__item" onClick={handleHelpFeedbackClick}>
-            <div className="preferences-page__item-content">
-              <h3 className="preferences-page__item-title">帮助与反馈</h3>
-              <div className="preferences-page__item-subtitle">常见问题和意见反馈</div>
-            </div>
-            <div className="preferences-page__item-arrow">›</div>
-          </div>
-        </div>
       </div>
 
       {/* 底部操作按钮 */}

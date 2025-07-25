@@ -50,8 +50,8 @@ const ProfilePage: React.FC = () => {
     {
       id: 'help-feedback',
       title: '帮助与反馈',
-      icon: '❓',
-      color: '#96CEB4',
+      icon: '💬',
+      color: '#9B59B6',
       onClick: () => {
         router.push('/user/preferences/help-feedback');
       }

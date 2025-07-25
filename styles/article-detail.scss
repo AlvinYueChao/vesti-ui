@@ -86,23 +86,7 @@
   }
 }
 
-.back-button {
-  background: none;
-  border: none;
-  font-size: 1rem;
-  color: var(--text-color);
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  transition: background-color 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-
-  &:hover {
-    background-color: #f0f0f0;
-  }
-}
+// Back button style is now global in components.scss
 
 .bookmark-button {
   background: none;

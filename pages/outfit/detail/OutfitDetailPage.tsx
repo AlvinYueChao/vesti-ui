@@ -24,14 +24,13 @@ interface OutfitDetail {
   items: ClothingItem[];
 }
 
-interface OutfitDetailPageProps {
-  outfitId: string;
-}
-
-const OutfitDetailPage: React.FC<OutfitDetailPageProps> = ({ outfitId }) => {
+const OutfitDetailPage: React.FC = () => {
   const router = useRouter();
   const [outfitDetail, setOutfitDetail] = useState<OutfitDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  
+  // 从路由参数获取outfitId
+  const { id: outfitId } = router.query;
 
   // Mock data - 在实际应用中这里会从API获取数据
   const mockOutfitDetails: Record<string, OutfitDetail> = {
@@ -136,6 +135,12 @@ const OutfitDetailPage: React.FC<OutfitDetailPageProps> = ({ outfitId }) => {
   };
 
   useEffect(() => {
+    // 确保outfitId存在且为字符串
+    if (!outfitId || typeof outfitId !== 'string') {
+      setLoading(false);
+      return;
+    }
+
     // 模拟API调用
     const loadOutfitDetail = () => {
       setTimeout(() => {

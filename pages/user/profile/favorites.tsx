@@ -69,8 +69,12 @@ const FavoritesPage: React.FC = () => {
     return (
       <div className="favorites-page">
         <div className="favorites-page__header">
-          <button className="favorites-page__back-btn" onClick={handleBack}>
-            ‹
+          <button className="back-button" onClick={handleBack}>
+            <img src="/assets/icons/actions/chevron-left.svg" alt="返回" onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling.style.display = 'inline';
+            }} />
+            <span style={{display: 'none'}}>←</span>
           </button>
           <h1 className="favorites-page__title">我的收藏</h1>
         </div>
@@ -82,8 +86,12 @@ const FavoritesPage: React.FC = () => {
   return (
     <div className="favorites-page">
       <div className="favorites-page__header">
-        <button className="favorites-page__back-btn" onClick={handleBack}>
-          ‹
+        <button className="back-button" onClick={handleBack}>
+          <img src="/assets/icons/actions/chevron-left.svg" alt="返回" onError={(e) => {
+            e.currentTarget.style.display = 'none';
+            e.currentTarget.nextElementSibling.style.display = 'inline';
+          }} />
+          <span style={{display: 'none'}}>←</span>
         </button>
         <h1 className="favorites-page__title">我的收藏</h1>
       </div>

@@ -127,7 +127,11 @@ const ArticleDetailPage: React.FC = () => {
       <div className="article-detail">
         <div className="article-detail__header">
           <button onClick={() => router.back()} className="back-button">
-            ← 返回
+            <img src="/assets/icons/actions/chevron-left.svg" alt="返回" onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling.style.display = 'inline';
+            }} />
+            <span style={{display: 'none'}}>←</span>
           </button>
         </div>
         <div className="article-detail__content">
@@ -141,7 +145,11 @@ const ArticleDetailPage: React.FC = () => {
     <div className="article-detail">
       <div className="article-detail__header">
         <button onClick={() => router.back()} className="back-button">
-          ← 返回
+          <img src="/assets/icons/actions/chevron-left.svg" alt="返回" onError={(e) => {
+            e.currentTarget.style.display = 'none';
+            e.currentTarget.nextElementSibling.style.display = 'inline';
+          }} />
+          <span style={{display: 'none'}}>←</span>
         </button>
         <h1 className="article-detail__title">{article.title}</h1>
         <button

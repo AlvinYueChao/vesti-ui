@@ -66,10 +66,14 @@ const HelpFeedbackPage: React.FC = () => {
       {/* Header */}
       <div className="help-feedback-page__header">
         <button 
-          className="help-feedback-page__back-btn"
+          className="back-button"
           onClick={() => router.back()}
         >
-          ←
+          <img src="/assets/icons/actions/chevron-left.svg" alt="返回" onError={(e) => {
+            e.currentTarget.style.display = 'none';
+            e.currentTarget.nextElementSibling.style.display = 'inline';
+          }} />
+          <span style={{display: 'none'}}>←</span>
         </button>
         <h1 className="help-feedback-page__title">帮助与反馈</h1>
         <div className="help-feedback-page__spacer"></div>

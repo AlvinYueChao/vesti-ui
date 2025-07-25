@@ -86,7 +86,18 @@ export const WardrobePage: React.FC = () => {
 
   return (
     <div className="wardrobe-page">
-
+      {isSelectMode && (
+        <header className="wardrobe-page__header">
+          <button className="back-button" onClick={handleBack}>
+            <img src="/assets/icons/actions/chevron-left.svg" alt="返回" onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling.style.display = 'inline';
+            }} />
+            <span style={{display: 'none'}}>←</span>
+          </button>
+          <h1 className="page-title">选择单品</h1>
+        </header>
+      )}
 
       <CategoryFilter
         categories={categories}

@@ -81,7 +81,7 @@ const HomePage: React.FC = () => {
 
   const handleScenarioStyling = () => {
     // Navigate to scenario selection page
-    router.push('/scenario-selection');
+    router.push('/outfit/scenario-selection');
   };
 
   const currentOutfit = recommendations[currentOutfitIndex];
