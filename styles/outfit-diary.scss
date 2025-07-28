@@ -340,6 +340,32 @@
     }
   }
 
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    padding: 2rem;
+    min-height: 200px;
+  }
+
+  &__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 2rem;
+    text-align: center;
+    min-height: 200px;
+  }
+
+  &__error-message {
+    font-size: 1rem;
+    color: var(--text-secondary);
+  }
 
 }
 

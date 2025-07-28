@@ -77,16 +77,48 @@ const OutfitDiaryPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="outfit-diary-page loading">
-        <div className="loading-spinner">加载中...</div>
+      <div className="outfit-diary-page">
+        <header className="outfit-diary-page__header">
+          <button className="back-button" onClick={handleBack}>
+            <img src="/assets/icons/actions/chevron-left.svg" alt="返回" onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling.style.display = 'inline';
+            }} />
+            <span style={{display: 'none'}}>←</span>
+          </button>
+
+          <div className="outfit-diary-page__month-nav">
+            <span className="outfit-diary-page__month-title">穿搭日记</span>
+          </div>
+
+          <div className="outfit-diary-page__view-toggle"></div>
+        </header>
+        <div className="outfit-diary-page__loading">加载中...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="outfit-diary-page error">
-        <div className="error-message">加载失败: {error}</div>
+      <div className="outfit-diary-page">
+        <header className="outfit-diary-page__header">
+          <button className="back-button" onClick={handleBack}>
+            <img src="/assets/icons/actions/chevron-left.svg" alt="返回" onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling.style.display = 'inline';
+            }} />
+            <span style={{display: 'none'}}>←</span>
+          </button>
+
+          <div className="outfit-diary-page__month-nav">
+            <span className="outfit-diary-page__month-title">穿搭日记</span>
+          </div>
+
+          <div className="outfit-diary-page__view-toggle"></div>
+        </header>
+        <div className="outfit-diary-page__error">
+          <div className="outfit-diary-page__error-message">加载失败: {error}</div>
+        </div>
       </div>
     );
   }

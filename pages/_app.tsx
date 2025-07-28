@@ -12,10 +12,8 @@ import '../styles/profile-page.scss';
 import '../styles/outfit-diary.scss';
 import '../styles/outfit-detail.scss';
 import '../styles/preferences.scss';
-import '../styles/outfit-detail.scss';
-import '../styles/outfit-detail.scss';
-import '../styles/outfit-detail.scss';
 import '../styles/article-detail.scss';
+import '../styles/item-detail.scss';
 import type { AppProps } from 'next/app';
 
 function MyApp({ Component, pageProps }: AppProps) {
