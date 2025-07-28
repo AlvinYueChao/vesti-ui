@@ -54,8 +54,8 @@ export const WardrobePage: React.FC = () => {
   };
 
   const handleAddItem = () => {
-    // TODO: Implement logic to show an "add item" modal or navigate to a new page
-    console.log('Add new clothing item');
+    // 跳转到添加单品的上传页面
+    router.push('/wardrobe/add/upload');
   };
 
   const handleTabChange = (tabId: string) => {

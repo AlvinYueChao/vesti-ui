@@ -14,6 +14,8 @@ import '../styles/outfit-detail.scss';
 import '../styles/preferences.scss';
 import '../styles/article-detail.scss';
 import '../styles/item-detail.scss';
+import '../styles/add-item-upload.scss';
+import '../styles/add-item-edit.scss';
 import type { AppProps } from 'next/app';
 
 function MyApp({ Component, pageProps }: AppProps) {
