@@ -33,8 +33,9 @@ export const useWardrobe = (userId: string) => {
     try {
       const response = await apiService.addClothingItem(userId, item);
       if (response.success && response.data) {
-        setItems(prev => [...prev, response.data as ClothingItem]);
-        return response.data;
+        const newItem = response.data as ClothingItem;
+        setItems(prev => [...prev, newItem]);
+        return newItem;
       } else {
         throw new Error(response.error || 'Failed to add item');
       }
@@ -42,6 +43,10 @@ export const useWardrobe = (userId: string) => {
       setError(err instanceof Error ? err.message : 'Failed to add item');
       throw err;
     }
+  };
+
+  const getItemById = (itemId: string) => {
+    return items.find(item => item.id === itemId);
   };
 
   const removeItem = async (itemId: string) => {
@@ -79,6 +84,7 @@ export const useWardrobe = (userId: string) => {
     addItem,
     removeItem,
     getItemsByCategory,
+    getItemById,
     searchItems,
     refreshWardrobe: loadWardrobe,
   };

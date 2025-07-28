@@ -20,6 +20,7 @@ export interface ClothingItem {
   category: ClothingCategory;
   color: string;
   brand?: string;
+  material?: string;
   image: string;
   imageUrl: string;
   tags: string[];

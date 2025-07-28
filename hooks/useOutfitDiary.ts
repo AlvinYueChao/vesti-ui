@@ -2,15 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { apiService } from '../services/api';
-
-interface ClothingItem {
-  id: string;
-  name: string;
-  category: string;
-  color: string;
-  material: string;
-  image: string;
-}
+import { ClothingItem } from '../types';
 
 export interface OutfitRecord {
   id: string;

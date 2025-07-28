@@ -1,5 +1,6 @@
 import React from 'react';
 import { Article } from '../../types';
+import { getPlaceholderImage, logImageUsage } from '../../utils/imageUtils';
 
 interface ArticleCardProps {
   article: Article;
@@ -17,12 +18,18 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     onBookmarkToggle();
   };
 
+  // 记录使用占位符图片的警告
+  React.useEffect(() => {
+    logImageUsage('ArticleCard');
+  }, []);
+
   return (
     <div className="article-card" onClick={onClick}>
       <div className="article-card__thumbnail">
-        <div className="article-card__placeholder">
-          <span>?</span><span>?</span><span>?</span><span>?</span>
-        </div>
+        <img 
+          src={getPlaceholderImage(article.thumbnail)}
+          alt={article.title}
+        />
       </div>
       
       <div className="article-card__content">

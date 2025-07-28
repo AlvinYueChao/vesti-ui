@@ -95,18 +95,26 @@ class ApiService {
         {
           id: 'item-1',
           name: '条纹衬衫',
-          category: '上装',
+          category: 'tops',
           color: '蓝色',
           material: '棉',
-          image: '/assets/images/item-1.jpg'
+          brand: 'UNIQLO',
+          image: '/assets/images/item-1.jpg',
+          imageUrl: '/assets/images/item-1.jpg',
+          tags: ['休闲', '条纹'],
+          addedDate: new Date('2024-01-15')
         },
         {
           id: 'item-2',
           name: '白色短裤',
-          category: '下装',
+          category: 'bottoms',
           color: '白色',
           material: '棉',
-          image: '/assets/images/item-2.jpg'
+          brand: 'H&M',
+          image: '/assets/images/item-2.jpg',
+          imageUrl: '/assets/images/item-2.jpg',
+          tags: ['夏季', '休闲'],
+          addedDate: new Date('2024-01-20')
         }
       ]
     },
@@ -128,10 +136,14 @@ class ApiService {
         {
           id: 'item-4',
           name: '粉色衬衫',
-          category: '上装',
+          category: 'tops',
           color: '粉色',
           material: '丝绸',
-          image: '/assets/images/item-4.jpg'
+          brand: 'ZARA',
+          image: '/assets/images/item-4.jpg',
+          imageUrl: '/assets/images/item-4.jpg',
+          tags: ['职场', '优雅'],
+          addedDate: new Date('2024-02-01')
         }
       ]
     },
@@ -153,17 +165,21 @@ class ApiService {
         {
           id: 'item-6',
           name: '红色T恤',
-          category: '上装',
+          category: 'tops',
           color: '红色',
           material: '棉',
-          image: '/assets/images/item-6.jpg'
+          brand: 'Nike',
+          image: '/assets/images/item-6.jpg',
+          imageUrl: '/assets/images/item-6.jpg',
+          tags: ['运动', '活力'],
+          addedDate: new Date('2024-02-10')
         }
       ]
     }
   ];
 
   private async request<T>(
-    endpoint: string, 
+    endpoint: string,
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
     // Use mock data in development
@@ -181,7 +197,7 @@ class ApiService {
       });
 
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'API request failed');
       }
@@ -311,7 +327,7 @@ class ApiService {
 
   // Outfit recommendations
   async getOutfitRecommendations(
-    userId: string, 
+    userId: string,
     scenario?: string,
     weather?: WeatherInfo
   ): Promise<ApiResponse<OutfitRecommendation[]>> {

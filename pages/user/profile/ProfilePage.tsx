@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { BottomNavigation } from '../../../components/common/BottomNavigation';
+import { useWardrobe } from '../../../hooks/useWardrobe';
 
 interface MenuItem {
   id: string;
@@ -13,6 +14,9 @@ interface MenuItem {
 const ProfilePage: React.FC = () => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('profile');
+
+  // 获取衣橱数据
+  const { items, loading } = useWardrobe('current-user'); // TODO: 使用真实的用户ID
 
   // 核心功能菜单项
   const coreMenuItems: MenuItem[] = [
@@ -95,7 +99,9 @@ const ProfilePage: React.FC = () => {
           </div>
           <div className="profile-page__user-details">
             <h2 className="profile-page__username">Vesti 用户</h2>
-            <p className="profile-page__stats">衣橱共有 82 件单品</p>
+            <p className="profile-page__stats">
+              衣橱共有 {loading ? '...' : items.length} 件单品
+            </p>
           </div>
         </div>
       </div>

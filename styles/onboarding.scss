@@ -108,6 +108,10 @@
         // 确保图片平滑缩放
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         
+        // 确保图片加载时的平滑过渡
+        opacity: 0;
+        animation: fadeInImage 0.3s ease-in-out forwards;
+        
         // 高分辨率显示优化
         @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
             image-rendering: -webkit-optimize-contrast;
@@ -124,10 +128,6 @@
             object-fit: contain;
             background-color: #f8f9fa;
         }
-        
-        // 确保图片加载时的平滑过渡
-        opacity: 0;
-        animation: fadeInImage 0.3s ease-in-out forwards;
         
         &:hover {
             transform: translateZ(0) scale(1.02);
