@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { getPlaceholderImage, logImageUsage } from '../../../utils/imageUtils';
 
 interface FavoriteArticle {
   id: string;
@@ -31,6 +32,9 @@ const FavoritesPage: React.FC = () => {
     };
 
     loadFavorites();
+    
+    // 记录使用占位符图片的警告
+    logImageUsage('FavoritesPage');
 
     // 监听收藏变化事件
     const handleFavoritesChange = () => {
@@ -118,7 +122,10 @@ const FavoritesPage: React.FC = () => {
                 onClick={() => handleArticleClick(article.id)}
               >
                 <div className="favorites-page__item-image">
-                  <img src={article.imageUrl} alt={article.title} />
+                  <img 
+                    src={getPlaceholderImage(article.imageUrl)}
+                    alt={article.title}
+                  />
                 </div>
                 <div className="favorites-page__item-content">
                   <h3 className="favorites-page__item-title">{article.title}</h3>

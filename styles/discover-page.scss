@@ -35,6 +35,9 @@
   color: white;
   position: relative;
   overflow: hidden;
+  min-height: 140px; // 两倍文章卡片高度
+  display: flex;
+  align-items: flex-end; // 文字靠底部对齐
 
   &:hover {
     transform: translateY(-2px);
@@ -43,6 +46,24 @@
   &__content {
     position: relative;
     z-index: 2;
+    width: 100%;
+  }
+
+  &__image {
+    position: absolute;
+    top: 50%;
+    right: 1.5rem; // 移到右侧
+    transform: translateY(-50%);
+    width: 120px; // 增大背景图尺寸
+    height: 120px;
+    opacity: 0.25;
+    z-index: 1;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
   }
 
   &__icons {
@@ -118,6 +139,17 @@
     border-radius: 8px;
     overflow: hidden;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 8px;
+    }
   }
 
   &__placeholder {
@@ -274,6 +306,13 @@
     padding: 1.25rem;
     margin-bottom: 1.25rem;
     border-radius: 12px;
+    min-height: 120px; // 移动端调整高度
+
+    &__image {
+      width: 80px; // 移动端调整背景图尺寸
+      height: 80px;
+      right: 1.25rem;
+    }
 
     &__icons {
       gap: 0.2rem;
@@ -314,6 +353,10 @@
     &__thumbnail {
       width: 60px;
       height: 60px;
+      
+      img {
+        padding: 6px;
+      }
     }
 
     &__placeholder {

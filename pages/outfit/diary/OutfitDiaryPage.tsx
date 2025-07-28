@@ -8,6 +8,7 @@ const OutfitDiaryPage: React.FC = () => {
   const router = useRouter();
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [currentMonth, setCurrentMonth] = useState(new Date()); // 使用当前日期
+  const [navigatingToDetail, setNavigatingToDetail] = useState<string | null>(null);
   
   const { records: outfitRecords, loading, error, refreshDiary } = useOutfitDiary('user-123');
 
@@ -24,6 +25,21 @@ const OutfitDiaryPage: React.FC = () => {
     }
   }, [router.query.refresh]);
 
+  // 监听路由变化，清除导航状态
+  useEffect(() => {
+    const handleRouteChangeComplete = () => {
+      setNavigatingToDetail(null);
+    };
+
+    router.events.on('routeChangeComplete', handleRouteChangeComplete);
+    router.events.on('routeChangeError', handleRouteChangeComplete);
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChangeComplete);
+      router.events.off('routeChangeError', handleRouteChangeComplete);
+    };
+  }, [router]);
+
   const handleBack = () => {
     router.back();
   };
@@ -37,6 +53,9 @@ const OutfitDiaryPage: React.FC = () => {
   };
 
   const handleRecordClick = (record: OutfitRecord) => {
+    // 设置导航状态，提供视觉反馈
+    setNavigatingToDetail(record.id);
+    
     // 跳转到穿搭详情页面
     router.push(`/outfit/detail?id=${record.id}`);
   };
@@ -101,12 +120,17 @@ const OutfitDiaryPage: React.FC = () => {
       {/* 内容区域 */}
       <div className="outfit-diary-page__content">
         {viewMode === 'list' ? (
-          <ListView records={currentMonthRecords} onRecordClick={handleRecordClick} />
+          <ListView 
+            records={currentMonthRecords} 
+            onRecordClick={handleRecordClick}
+            navigatingToDetail={navigatingToDetail}
+          />
         ) : (
           <CalendarView
             currentMonth={currentMonth}
             records={currentMonthRecords}
             onRecordClick={handleRecordClick}
+            navigatingToDetail={navigatingToDetail}
           />
         )}
       </div>
@@ -119,7 +143,8 @@ const OutfitDiaryPage: React.FC = () => {
 const ListView: React.FC<{
   records: OutfitRecord[];
   onRecordClick: (record: OutfitRecord) => void;
-}> = ({ records, onRecordClick }) => {
+  navigatingToDetail: string | null;
+}> = ({ records, onRecordClick, navigatingToDetail }) => {
   const sortedRecords = [...records].sort((a, b) =>
     new Date(b.date).getTime() - new Date(a.date).getTime()
   );
@@ -135,7 +160,7 @@ const ListView: React.FC<{
         sortedRecords.map((record, index) => (
           <div
             key={record.id}
-            className="outfit-diary-page__list-item"
+            className={`outfit-diary-page__list-item ${navigatingToDetail === record.id ? 'navigating' : ''}`}
             onClick={() => onRecordClick(record)}
           >
             <div className={`outfit-diary-page__list-image outfit-diary-page__list-image--${index % 3}`}>
@@ -170,7 +195,8 @@ const CalendarView: React.FC<{
   currentMonth: Date;
   records: OutfitRecord[];
   onRecordClick: (record: OutfitRecord) => void;
-}> = ({ currentMonth, records, onRecordClick }) => {
+  navigatingToDetail: string | null;
+}> = ({ currentMonth, records, onRecordClick, navigatingToDetail }) => {
   const year = currentMonth.getFullYear();
   const month = currentMonth.getMonth();
 
@@ -211,7 +237,7 @@ const CalendarView: React.FC<{
           return (
             <div
               key={index}
-              className={`outfit-diary-page__calendar-day ${item?.record ? 'has-record' : ''} ${isToday ? 'is-today' : ''}`}
+              className={`outfit-diary-page__calendar-day ${item?.record ? 'has-record' : ''} ${isToday ? 'is-today' : ''} ${item?.record && navigatingToDetail === item.record.id ? 'navigating' : ''}`}
               onClick={() => item?.record && onRecordClick(item.record)}
             >
               {item && (

@@ -13,7 +13,7 @@ const mockArticles: Article[] = [
     id: '1',
     title: '梨形身材如何扬长避短?',
     summary: '身形解析',
-    thumbnail: '/assets/images/article-1.jpg',
+    thumbnail: '/assets/icons/placeholder-icon.svg',
     readCount: '5.1k',
     category: '穿搭知识库',
     isBookmarked: false
@@ -22,7 +22,7 @@ const mockArticles: Article[] = [
     id: '2',
     title: '色彩搭配入门：从邻近色开始',
     summary: '色彩美学',
-    thumbnail: '/assets/images/article-2.jpg',
+    thumbnail: '/assets/icons/placeholder-icon.svg',
     readCount: '8.2k',
     category: '穿搭知识库',
     isBookmarked: false
@@ -31,7 +31,7 @@ const mockArticles: Article[] = [
     id: '3',
     title: '春季流行趋势解析',
     summary: '时尚趋势',
-    thumbnail: '/assets/images/article-3.jpg',
+    thumbnail: '/assets/icons/placeholder-icon.svg',
     readCount: '3.7k',
     category: '穿搭知识库',
     isBookmarked: false
@@ -40,7 +40,7 @@ const mockArticles: Article[] = [
     id: '4',
     title: '职场穿搭的黄金法则',
     summary: '职场搭配',
-    thumbnail: '/assets/images/article-4.jpg',
+    thumbnail: '/assets/icons/placeholder-icon.svg',
     readCount: '6.3k',
     category: '穿搭知识库',
     isBookmarked: false
@@ -51,7 +51,7 @@ const bannerData: BannerData = {
   id: 'banner-1',
   title: '2025年度流行色报告：柔和桃',
   subtitle: '如何将Peach Fuzz融入日常穿搭',
-  image: '/assets/images/banner-peach.jpg'
+  image: '/assets/icons/placeholder-icon.svg'
 };
 
 export const DiscoverPage: React.FC = () => {

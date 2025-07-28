@@ -5,30 +5,28 @@ import { useOutfitDiary, OutfitRecord } from '../../../hooks/useOutfitDiary';
 const OutfitDetailPage: React.FC = () => {
   const router = useRouter();
   const [outfitDetail, setOutfitDetail] = useState<OutfitRecord | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [pageLoading, setPageLoading] = useState(true);
   
   // 从路由参数获取outfitId
   const { id: outfitId } = router.query;
   
   // 使用穿搭日记hook
-  const { records, deleteOutfitRecord } = useOutfitDiary('user-123');
+  const { records, loading: dataLoading, deleteOutfitRecord } = useOutfitDiary('user-123');
 
   useEffect(() => {
     // 确保outfitId存在且为字符串
     if (!outfitId || typeof outfitId !== 'string') {
-      setLoading(false);
+      setPageLoading(false);
       return;
     }
 
-    // 从记录中查找对应的穿搭详情
-    const loadOutfitDetail = () => {
+    // 只有在数据加载完成后才进行查找
+    if (!dataLoading) {
       const detail = records.find(record => record.id === outfitId);
       setOutfitDetail(detail || null);
-      setLoading(false);
-    };
-
-    loadOutfitDetail();
-  }, [outfitId, records]);
+      setPageLoading(false);
+    }
+  }, [outfitId, records, dataLoading]);
 
   const handleBack = () => {
     router.back();
@@ -97,18 +95,47 @@ const OutfitDetailPage: React.FC = () => {
     router.push(`/discover?${styleParams.toString()}`);
   };
 
-  if (loading) {
+  // 显示加载状态：当页面加载中或数据加载中时
+  if (pageLoading || dataLoading) {
     return (
       <div className="outfit-detail-page">
+        <header className="outfit-detail-page__header">
+          <button className="outfit-detail-page__back-btn" onClick={handleBack}>
+            ‹
+          </button>
+          <h1 className="outfit-detail-page__title">穿搭详情</h1>
+          <button className="outfit-detail-page__share-btn" disabled>
+            ↗
+          </button>
+        </header>
         <div className="outfit-detail-page__loading">加载中...</div>
       </div>
     );
   }
 
+  // 只有在数据加载完成且确实找不到记录时才显示错误
   if (!outfitDetail) {
     return (
       <div className="outfit-detail-page">
-        <div className="outfit-detail-page__error">穿搭记录不存在</div>
+        <header className="outfit-detail-page__header">
+          <button className="outfit-detail-page__back-btn" onClick={handleBack}>
+            ‹
+          </button>
+          <h1 className="outfit-detail-page__title">穿搭详情</h1>
+          <button className="outfit-detail-page__share-btn" disabled>
+            ↗
+          </button>
+        </header>
+        <div className="outfit-detail-page__error">
+          <div className="outfit-detail-page__error-icon">😔</div>
+          <div className="outfit-detail-page__error-text">穿搭记录不存在</div>
+          <button 
+            className="outfit-detail-page__error-btn"
+            onClick={handleBack}
+          >
+            返回日记
+          </button>
+        </div>
       </div>
     );
   }

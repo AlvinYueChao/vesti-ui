@@ -1,3 +1,8 @@
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
 .outfit-diary-page {
   min-height: 100vh;
   background-color: #f8f9fa;
@@ -130,6 +135,26 @@
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
+
+    &.navigating {
+      opacity: 0.6;
+      transform: scale(0.98);
+      pointer-events: none;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--primary-color);
+        border-top: 2px solid transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+    }
   }
 
   &__list-image {
@@ -259,6 +284,26 @@
       &.has-record {
         background-color: #FF6B6B;
         border-color: #FF6B6B;
+      }
+    }
+
+    &.navigating {
+      opacity: 0.6;
+      transform: scale(0.95);
+      pointer-events: none;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 16px;
+        height: 16px;
+        border: 2px solid var(--primary-color);
+        border-top: 2px solid transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
       }
     }
   }
