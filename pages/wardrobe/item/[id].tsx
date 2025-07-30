@@ -129,8 +129,8 @@ const WardrobeItemDetail: React.FC = () => {
         color: itemDetail.color,
         brand: itemDetail.brand,
         material: itemDetail.material,
-        image: '', // 图片位置留空
-        imageUrl: '',
+        image: itemDetail.image || itemDetail.imageUrl || '',
+        imageUrl: itemDetail.image || itemDetail.imageUrl || '',
         tags: itemDetail.tags || [],
         addedDate: new Date()
       });

@@ -6,177 +6,245 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api.pocketdesigne
 
 class ApiService {
   private useMockData = true; // Set to false when real API is available
+  private readonly WARDROBE_STORAGE_KEY = 'pocket_designer_wardrobe';
+  private readonly DIARY_STORAGE_KEY = 'pocket_designer_diary';
 
-  private mockWardrobeData: ClothingItem[] = [
-    {
-      id: '1',
-      name: '条纹衬衫',
-      category: 'tops',
-      color: '蓝白',
-      brand: 'UNIQLO',
-      image: '/assets/images/striped-shirt.jpg',
-      imageUrl: '/assets/images/striped-shirt.jpg',
-      tags: ['休闲', '经典'],
-      addedDate: new Date('2024-01-15')
-    },
-    {
-      id: '2',
-      name: '白色T恤',
-      category: 'tops',
-      color: '白色',
-      brand: 'H&M',
-      image: '/assets/images/white-tee.jpg',
-      imageUrl: '/assets/images/white-tee.jpg',
-      tags: ['基础款', '百搭'],
-      addedDate: new Date('2024-01-20')
-    },
-    {
-      id: '3',
-      name: '牛仔裤',
-      category: 'bottoms',
-      color: '深蓝',
-      brand: 'Levi\'s',
-      image: '/assets/images/jeans.jpg',
-      imageUrl: '/assets/images/jeans.jpg',
-      tags: ['经典', '耐穿'],
-      addedDate: new Date('2024-01-10')
-    },
-    {
-      id: '4',
-      name: '小白鞋',
-      category: 'shoes',
-      color: '白色',
-      brand: 'Adidas',
-      image: '/assets/images/white-sneakers.jpg',
-      imageUrl: '/assets/images/white-sneakers.jpg',
-      tags: ['运动', '百搭'],
-      addedDate: new Date('2024-01-25')
-    },
-    {
-      id: '5',
-      name: '黑色西装裤',
-      category: 'bottoms',
-      color: '黑色',
-      brand: 'ZARA',
-      image: '/assets/images/black-pants.jpg',
-      imageUrl: '/assets/images/black-pants.jpg',
-      tags: ['正式', '商务'],
-      addedDate: new Date('2024-02-01')
-    },
-    {
-      id: '6',
-      name: '丝巾',
-      category: 'accessories',
-      color: '花色',
-      brand: 'Hermès',
-      image: '/assets/images/silk-scarf.jpg',
-      imageUrl: '/assets/images/silk-scarf.jpg',
-      tags: ['优雅', '配饰'],
-      addedDate: new Date('2024-02-05')
+  constructor() {
+    // Only initialize on client side
+    if (typeof window !== 'undefined') {
+      this.initializeDefaultData();
     }
-  ];
+  }
 
-  private mockOutfitDiaryData: any[] = [
-    {
-      id: '1',
-      date: '2025-07-09',
-      dayOfWeek: '星期三',
-      weather: {
-        location: '上海',
-        temperature: '29°C',
-        condition: '晴'
+  private get mockWardrobeData(): ClothingItem[] {
+    if (typeof window === 'undefined') {
+      return this.getDefaultWardrobeData();
+    }
+
+    const stored = localStorage.getItem(this.WARDROBE_STORAGE_KEY);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch (e) {
+        console.error('Failed to parse stored wardrobe data:', e);
+      }
+    }
+    return this.getDefaultWardrobeData();
+  }
+
+  private set mockWardrobeData(data: ClothingItem[]) {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(this.WARDROBE_STORAGE_KEY, JSON.stringify(data));
+    }
+  }
+
+  private initializeDefaultData() {
+    // Initialize wardrobe data if not exists
+    if (!localStorage.getItem(this.WARDROBE_STORAGE_KEY)) {
+      this.mockWardrobeData = this.getDefaultWardrobeData();
+    }
+    // Initialize diary data if not exists
+    if (!localStorage.getItem(this.DIARY_STORAGE_KEY)) {
+      this.mockOutfitDiaryData = this.getDefaultDiaryData();
+    }
+  }
+
+  private getDefaultWardrobeData(): ClothingItem[] {
+    return [
+      {
+        id: '1',
+        name: '条纹衬衫',
+        category: 'tops',
+        color: '蓝白',
+        brand: 'UNIQLO',
+        image: '/assets/images/striped-shirt.jpg',
+        imageUrl: '/assets/images/striped-shirt.jpg',
+        tags: ['休闲', '经典'],
+        addedDate: new Date('2024-01-15')
       },
-      colors: ['#87CEEB', '#D3D3D3', '#FFD700'],
-      image: '/assets/images/virtual-tryon-placeholder.jpg',
-      description: '清爽的夏日搭配',
-      aiComment: '蓝色衬衫与白色短裤的组合，在炎热的夏日带来一丝清凉，是经典的休闲搭配。',
-      aiDesignerNote: '蓝色衬衫与白色短裤的组合，在炎热的夏日带来一丝清凉，是经典的休闲搭配。',
-      items: [
-        {
-          id: 'item-1',
-          name: '条纹衬衫',
-          category: 'tops',
-          color: '蓝色',
-          material: '棉',
-          brand: 'UNIQLO',
-          image: '/assets/images/item-1.jpg',
-          imageUrl: '/assets/images/item-1.jpg',
-          tags: ['休闲', '条纹'],
-          addedDate: new Date('2024-01-15')
+      {
+        id: '2',
+        name: '白色T恤',
+        category: 'tops',
+        color: '白色',
+        brand: 'H&M',
+        image: '/assets/images/white-tee.jpg',
+        imageUrl: '/assets/images/white-tee.jpg',
+        tags: ['基础款', '百搭'],
+        addedDate: new Date('2024-01-20')
+      },
+      {
+        id: '3',
+        name: '牛仔裤',
+        category: 'bottoms',
+        color: '深蓝',
+        brand: 'Levi\'s',
+        image: '/assets/images/jeans.jpg',
+        imageUrl: '/assets/images/jeans.jpg',
+        tags: ['经典', '耐穿'],
+        addedDate: new Date('2024-01-10')
+      },
+      {
+        id: '4',
+        name: '小白鞋',
+        category: 'shoes',
+        color: '白色',
+        brand: 'Adidas',
+        image: '/assets/images/white-sneakers.jpg',
+        imageUrl: '/assets/images/white-sneakers.jpg',
+        tags: ['运动', '百搭'],
+        addedDate: new Date('2024-01-25')
+      },
+      {
+        id: '5',
+        name: '黑色西装裤',
+        category: 'bottoms',
+        color: '黑色',
+        brand: 'ZARA',
+        image: '/assets/images/black-suit-pants.jpg',
+        imageUrl: '/assets/images/black-suit-pants.jpg',
+        tags: ['正式', '商务'],
+        addedDate: new Date('2024-02-01')
+      },
+      {
+        id: '6',
+        name: '丝巾',
+        category: 'accessories',
+        color: '花色',
+        brand: 'Hermès',
+        image: '/assets/images/silk-scarf.jpg',
+        imageUrl: '/assets/images/silk-scarf.jpg',
+        tags: ['优雅', '配饰'],
+        addedDate: new Date('2024-02-05')
+      }
+    ];
+  }
+
+  private get mockOutfitDiaryData(): any[] {
+    if (typeof window === 'undefined') {
+      return this.getDefaultDiaryData();
+    }
+
+    const stored = localStorage.getItem(this.DIARY_STORAGE_KEY);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch (e) {
+        console.error('Failed to parse stored diary data:', e);
+      }
+    }
+    return this.getDefaultDiaryData();
+  }
+
+  private set mockOutfitDiaryData(data: any[]) {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(this.DIARY_STORAGE_KEY, JSON.stringify(data));
+    }
+  }
+
+  private getDefaultDiaryData(): any[] {
+    return [
+      {
+        id: '1',
+        date: '2025-07-09',
+        dayOfWeek: '星期三',
+        weather: {
+          location: '上海',
+          temperature: '29°C',
+          condition: '晴'
         },
-        {
-          id: 'item-2',
-          name: '白色短裤',
-          category: 'bottoms',
-          color: '白色',
-          material: '棉',
-          brand: 'H&M',
-          image: '/assets/images/item-2.jpg',
-          imageUrl: '/assets/images/item-2.jpg',
-          tags: ['夏季', '休闲'],
-          addedDate: new Date('2024-01-20')
-        }
-      ]
-    },
-    {
-      id: '2',
-      date: '2025-07-03',
-      dayOfWeek: '星期四',
-      weather: {
-        location: '上海',
-        temperature: '32°C',
-        condition: '多云'
+        colors: ['#87CEEB', '#D3D3D3', '#FFD700'],
+        image: '/assets/images/virtual-tryon-placeholder.jpg',
+        description: '清爽的夏日搭配',
+        aiComment: '蓝色衬衫与白色短裤的组合，在炎热的夏日带来一丝清凉，是经典的休闲搭配。',
+        aiDesignerNote: '蓝色衬衫与白色短裤的组合，在炎热的夏日带来一丝清凉，是经典的休闲搭配。',
+        items: [
+          {
+            id: 'item-1',
+            name: '条纹衬衫',
+            category: 'tops',
+            color: '蓝色',
+            material: '棉',
+            brand: 'UNIQLO',
+            image: '/assets/images/striped-shirt.jpg',
+            imageUrl: '/assets/images/striped-shirt.jpg',
+            tags: ['休闲', '条纹'],
+            addedDate: new Date('2024-01-15')
+          },
+          {
+            id: 'item-2',
+            name: '白色短裤',
+            category: 'bottoms',
+            color: '白色',
+            material: '棉',
+            brand: 'H&M',
+            image: '/assets/images/white-shorts.jpg',
+            imageUrl: '/assets/images/white-shorts.jpg',
+            tags: ['夏季', '休闲'],
+            addedDate: new Date('2024-01-20')
+          }
+        ]
       },
-      colors: ['#FFB6C1', '#000000'],
-      image: '/assets/images/virtual-tryon-placeholder.jpg',
-      description: '简约职场风格',
-      aiComment: '粉色上衣与黑色下装的经典搭配，既保持了女性的柔美，又不失职场的专业感。',
-      aiDesignerNote: '粉色上衣与黑色下装的经典搭配，既保持了女性的柔美，又不失职场的专业感。',
-      items: [
-        {
-          id: 'item-4',
-          name: '粉色衬衫',
-          category: 'tops',
-          color: '粉色',
-          material: '丝绸',
-          brand: 'ZARA',
-          image: '/assets/images/item-4.jpg',
-          imageUrl: '/assets/images/item-4.jpg',
-          tags: ['职场', '优雅'],
-          addedDate: new Date('2024-02-01')
-        }
-      ]
-    },
-    {
-      id: '3',
-      date: '2025-07-23',
-      dayOfWeek: '星期三',
-      weather: {
-        location: '上海',
-        temperature: '28°C',
-        condition: '晴'
+      {
+        id: '2',
+        date: '2025-07-03',
+        dayOfWeek: '星期四',
+        weather: {
+          location: '上海',
+          temperature: '32°C',
+          condition: '多云'
+        },
+        colors: ['#FFB6C1', '#000000'],
+        image: '/assets/images/virtual-tryon-placeholder.jpg',
+        description: '简约职场风格',
+        aiComment: '粉色上衣与黑色下装的经典搭配，既保持了女性的柔美，又不失职场的专业感。',
+        aiDesignerNote: '粉色上衣与黑色下装的经典搭配，既保持了女性的柔美，又不失职场的专业感。',
+        items: [
+          {
+            id: 'item-4',
+            name: '粉色衬衫',
+            category: 'tops',
+            color: '粉色',
+            material: '丝绸',
+            brand: 'ZARA',
+            image: '/assets/images/pink-shirt.jpg',
+            imageUrl: '/assets/images/pink-shirt.jpg',
+            tags: ['职场', '优雅'],
+            addedDate: new Date('2024-02-01')
+          }
+        ]
       },
-      colors: ['#FF6B6B', '#FFFFFF'],
-      image: '/assets/images/virtual-tryon-placeholder.jpg',
-      description: '活力红白搭配',
-      aiComment: '红白配色经典而醒目，适合需要展现活力和自信的场合。',
-      aiDesignerNote: '红白配色经典而醒目，适合需要展现活力和自信的场合。',
-      items: [
-        {
-          id: 'item-6',
-          name: '红色T恤',
-          category: 'tops',
-          color: '红色',
-          material: '棉',
-          brand: 'Nike',
-          image: '/assets/images/item-6.jpg',
-          imageUrl: '/assets/images/item-6.jpg',
-          tags: ['运动', '活力'],
-          addedDate: new Date('2024-02-10')
-        }
-      ]
-    }
-  ];
+      {
+        id: '3',
+        date: '2025-07-23',
+        dayOfWeek: '星期三',
+        weather: {
+          location: '上海',
+          temperature: '28°C',
+          condition: '晴'
+        },
+        colors: ['#FF6B6B', '#FFFFFF'],
+        image: '/assets/images/virtual-tryon-placeholder.jpg',
+        description: '活力红白搭配',
+        aiComment: '红白配色经典而醒目，适合需要展现活力和自信的场合。',
+        aiDesignerNote: '红白配色经典而醒目，适合需要展现活力和自信的场合。',
+        items: [
+          {
+            id: 'item-6',
+            name: '红色T恤',
+            category: 'tops',
+            color: '红色',
+            material: '棉',
+            brand: 'Nike',
+            image: '/assets/images/red-t-shirt.jpg',
+            imageUrl: '/assets/images/red-t-shirt.jpg',
+            tags: ['运动', '活力'],
+            addedDate: new Date('2024-02-10')
+          }
+        ]
+      }
+    ];
+  }
 
   private async request<T>(
     endpoint: string,
@@ -236,7 +304,9 @@ class ApiService {
           id: Date.now().toString(),
           addedDate: new Date()
         };
-        this.mockWardrobeData.push(itemWithId);
+        const currentData = this.mockWardrobeData;
+        currentData.push(itemWithId);
+        this.mockWardrobeData = currentData;
         return {
           success: true,
           data: itemWithId as T,
@@ -245,7 +315,8 @@ class ApiService {
 
       if (endpoint.includes('/wardrobe') && options.method === 'DELETE') {
         const itemId = endpoint.split('/').pop();
-        this.mockWardrobeData = this.mockWardrobeData.filter(item => item.id !== itemId);
+        const currentData = this.mockWardrobeData;
+        this.mockWardrobeData = currentData.filter(item => item.id !== itemId);
         return {
           success: true,
           data: null as T,
@@ -266,7 +337,9 @@ class ApiService {
           ...newRecord,
           id: Date.now().toString(),
         };
-        this.mockOutfitDiaryData.push(recordWithId);
+        const currentData = this.mockOutfitDiaryData;
+        currentData.push(recordWithId);
+        this.mockOutfitDiaryData = currentData;
         return {
           success: true,
           data: recordWithId as T,
@@ -275,7 +348,8 @@ class ApiService {
 
       if (endpoint.includes('/outfit-diary') && options.method === 'DELETE') {
         const recordId = endpoint.split('/').pop();
-        this.mockOutfitDiaryData = this.mockOutfitDiaryData.filter(record => record.id !== recordId);
+        const currentData = this.mockOutfitDiaryData;
+        this.mockOutfitDiaryData = currentData.filter(record => record.id !== recordId);
         return {
           success: true,
           data: null as T,

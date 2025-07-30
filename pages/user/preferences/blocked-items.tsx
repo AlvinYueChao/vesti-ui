@@ -20,21 +20,21 @@ const BlockedItemsPage: React.FC = () => {
       name: '豹纹连衣裙',
       category: '连衣裙',
       color: '豹纹',
-      image: '/assets/images/blocked-item-1.jpg'
+      image: '/assets/images/blocked-striped-shirt.jpg'
     },
     {
       id: 'item-2',
       name: '亮片上衣',
       category: '上装',
       color: '银色',
-      image: '/assets/images/blocked-item-2.jpg'
+      image: '/assets/images/blocked-white-shorts.jpg'
     },
     {
       id: 'item-3',
       name: '超短裙',
       category: '下装',
       color: '黑色',
-      image: '/assets/images/blocked-item-3.jpg'
+      image: '/assets/images/blocked-black-suit-pants.jpg'
     }
   ];
 

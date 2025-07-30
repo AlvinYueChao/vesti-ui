@@ -34,9 +34,9 @@ const OutfitResultPage: React.FC = () => {
           {
             id: 'rec-1',
             items: [
-              { id: 'item-1', name: '白色衬衫', category: '上装', color: '白色', image: '/assets/images/item-1.jpg' },
-              { id: 'item-2', name: '黑色西装裤', category: '下装', color: '黑色', image: '/assets/images/item-2.jpg' },
-              { id: 'item-3', name: '黑色皮鞋', category: '鞋子', color: '黑色', image: '/assets/images/item-3.jpg' }
+              { id: 'item-1', name: '白色衬衫', category: '上装', color: '白色', image: '/assets/images/striped-shirt.jpg' },
+              { id: 'item-2', name: '黑色西装裤', category: '下装', color: '黑色', image: '/assets/images/white-shorts.jpg' },
+              { id: 'item-3', name: '黑色皮鞋', category: '鞋子', color: '黑色', image: '/assets/images/black-suit-pants.jpg' }
             ],
             description: '经典商务搭配，专业而优雅',
             suitability: '95%'
@@ -44,9 +44,9 @@ const OutfitResultPage: React.FC = () => {
           {
             id: 'rec-2',
             items: [
-              { id: 'item-4', name: '蓝色衬衫', category: '上装', color: '蓝色', image: '/assets/images/item-4.jpg' },
-              { id: 'item-5', name: '灰色西装裤', category: '下装', color: '灰色', image: '/assets/images/item-5.jpg' },
-              { id: 'item-6', name: '棕色皮鞋', category: '鞋子', color: '棕色', image: '/assets/images/item-6.jpg' }
+              { id: 'item-4', name: '蓝色衬衫', category: '上装', color: '蓝色', image: '/assets/images/pink-shirt.jpg' },
+              { id: 'item-5', name: '灰色西装裤', category: '下装', color: '灰色', image: '/assets/images/jeans.jpg' },
+              { id: 'item-6', name: '棕色皮鞋', category: '鞋子', color: '棕色', image: '/assets/images/red-t-shirt.jpg' }
             ],
             description: '温和的商务风格，适合日常工作',
             suitability: '88%'
