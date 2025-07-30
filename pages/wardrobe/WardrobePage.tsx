@@ -7,19 +7,23 @@ import { CategoryFilter } from '../../components/wardrobe/CategoryFilter';
 import { WardrobeGrid } from '../../components/wardrobe/WardrobeGrid';
 import { FloatingActionButton } from '../../components/wardrobe/FloatingActionButton';
 import { BottomNavigation } from '../../components/common/BottomNavigation';
-
-const categories = [
-  { id: 'all', label: '全部', color: '#FF6B6B' },
-  { id: 'tops', label: '上装', color: '#FFB5B5' },
-  { id: 'bottoms', label: '下装', color: '#B5E7FF' },
-  { id: 'shoes', label: '鞋子', color: '#FFE5B5' },
-  { id: 'accessories', label: '配饰', color: '#E5B5FF' }
-];
+import { useTranslation } from '../../hooks/useTranslation';
 
 export const WardrobePage: React.FC = () => {
   const router = useRouter();
   const { mode } = router.query; // Get mode from query params
   const isSelectMode = mode === 'select';
+  const { tCategory } = useTranslation();
+
+  const categories = [
+    { id: 'all', label: '全部', color: '#FF6B6B' },
+    { id: 'tops', label: tCategory('tops'), color: '#FFB5B5' },
+    { id: 'bottoms', label: tCategory('bottoms'), color: '#B5E7FF' },
+    { id: 'dresses', label: tCategory('dresses'), color: '#FFD1DC' },
+    { id: 'shoes', label: tCategory('shoes'), color: '#FFE5B5' },
+    { id: 'accessories', label: tCategory('accessories'), color: '#E5B5FF' },
+    { id: 'outerwear', label: tCategory('outerwear'), color: '#C5E1A5' }
+  ];
   
   // Assuming a fixed user ID for now
   const userId = 'user-123';

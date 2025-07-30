@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useWardrobe } from '../../../hooks/useWardrobe';
 import { ClothingCategory } from '../../../types';
+import { useTranslation } from '../../../hooks/useTranslation';
 
 interface AIAnalysisResult {
   category: ClothingCategory;
@@ -9,14 +10,6 @@ interface AIAnalysisResult {
   tags: string[];
   name: string;
 }
-
-const categories = [
-  { id: 'tops', label: '上装', color: '#FFB5B5' },
-  { id: 'bottoms', label: '下装', color: '#B5E7FF' },
-  { id: 'shoes', label: '鞋子', color: '#FFE5B5' },
-  { id: 'accessories', label: '配饰', color: '#E5B5FF' },
-  { id: 'outerwear', label: '外套', color: '#C5E1A5' }
-];
 
 const predefinedColors = [
   '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
@@ -28,6 +21,16 @@ const predefinedColors = [
 const AddItemEditPage: React.FC = () => {
   const router = useRouter();
   const { addItem } = useWardrobe('user-123');
+  const { tCategory } = useTranslation();
+
+  const categories = [
+    { id: 'tops', label: tCategory('tops'), color: '#FFB5B5' },
+    { id: 'bottoms', label: tCategory('bottoms'), color: '#B5E7FF' },
+    { id: 'dresses', label: tCategory('dresses'), color: '#FFD1DC' },
+    { id: 'shoes', label: tCategory('shoes'), color: '#FFE5B5' },
+    { id: 'accessories', label: tCategory('accessories'), color: '#E5B5FF' },
+    { id: 'outerwear', label: tCategory('outerwear'), color: '#C5E1A5' }
+  ];
 
   // 检查sessionStorage是否可用
   const isSessionStorageAvailable = () => {
@@ -40,7 +43,7 @@ const AddItemEditPage: React.FC = () => {
       return false;
     }
   };
-  
+
   const [uploadedImage, setUploadedImage] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<ClothingCategory>('tops');
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
@@ -53,7 +56,7 @@ const AddItemEditPage: React.FC = () => {
   useEffect(() => {
     console.log('Edit page useEffect triggered');
     let imageFound = false;
-    
+
     // 首先尝试从sessionStorage获取图片数据
     if (isSessionStorageAvailable()) {
       console.log('SessionStorage is available');
@@ -71,7 +74,7 @@ const AddItemEditPage: React.FC = () => {
     } else {
       console.log('SessionStorage is not available');
     }
-    
+
     // 如果sessionStorage中没有或不可用，尝试从URL参数获取（fallback）
     if (!imageFound) {
       const imageFromQuery = router.query.image as string;
@@ -83,11 +86,11 @@ const AddItemEditPage: React.FC = () => {
         console.log('No image found in query parameters');
       }
     }
-    
+
     if (!imageFound) {
       console.log('No image found in sessionStorage or query');
     }
-    
+
     // 获取AI分析结果
     const aiResultStr = router.query.aiResult as string;
     if (aiResultStr) {
@@ -110,7 +113,7 @@ const AddItemEditPage: React.FC = () => {
   useEffect(() => {
     if (router.isReady && !uploadedImage) {
       console.log('Router is ready, checking for image again');
-      
+
       if (isSessionStorageAvailable()) {
         const storedImage = sessionStorage.getItem('uploadedImage');
         if (storedImage) {
@@ -148,7 +151,7 @@ const AddItemEditPage: React.FC = () => {
 
       // 清理sessionStorage中的图片数据
       sessionStorage.removeItem('uploadedImage');
-      
+
       // 保存成功，返回衣橱页面
       router.push('/wardrobe');
     } catch (error) {
@@ -164,8 +167,8 @@ const AddItemEditPage: React.FC = () => {
   };
 
   const handleColorToggle = (color: string) => {
-    setSelectedColors(prev => 
-      prev.includes(color) 
+    setSelectedColors(prev =>
+      prev.includes(color)
         ? prev.filter(c => c !== color)
         : [...prev, color]
     );
@@ -197,7 +200,7 @@ const AddItemEditPage: React.FC = () => {
           取消
         </button>
         <h1 className="add-item-edit-page__title">编辑单品信息</h1>
-        <button 
+        <button
           className="add-item-edit-page__save-btn"
           onClick={handleSave}
           disabled={saving}
@@ -210,9 +213,9 @@ const AddItemEditPage: React.FC = () => {
         {/* 单品预览图 */}
         <div className="add-item-edit-page__preview">
           {uploadedImage ? (
-            <img 
-              src={uploadedImage} 
-              alt="单品预览" 
+            <img
+              src={uploadedImage}
+              alt="单品预览"
               className="add-item-edit-page__preview-image"
               onLoad={() => {
                 console.log('Image loaded successfully');
@@ -230,7 +233,7 @@ const AddItemEditPage: React.FC = () => {
               }}
             />
           ) : null}
-          <div 
+          <div
             className="add-item-edit-page__preview-placeholder"
             style={{ display: uploadedImage ? 'none' : 'flex' }}
           >
@@ -240,16 +243,16 @@ const AddItemEditPage: React.FC = () => {
             {process.env.NODE_ENV === 'development' && (
               <div style={{ marginTop: '0.5rem', fontSize: '0.75rem', opacity: 0.7 }}>
                 {uploadedImage && <div>图片数据长度: {uploadedImage.length}</div>}
-                <button 
+                <button
                   onClick={() => {
                     const stored = sessionStorage.getItem('uploadedImage');
                     console.log('Manual check - SessionStorage image:', stored ? `Found (${stored.length} chars)` : 'Not found');
                     console.log('Current uploadedImage state:', uploadedImage ? `Set (${uploadedImage.length} chars)` : 'Empty');
                     alert(`SessionStorage: ${stored ? 'Found' : 'Not found'}\nState: ${uploadedImage ? 'Set' : 'Empty'}`);
                   }}
-                  style={{ 
-                    padding: '0.25rem 0.5rem', 
-                    fontSize: '0.7rem', 
+                  style={{
+                    padding: '0.25rem 0.5rem',
+                    fontSize: '0.7rem',
                     marginTop: '0.25rem',
                     background: '#007bff',
                     color: 'white',
@@ -298,9 +301,8 @@ const AddItemEditPage: React.FC = () => {
               {categories.map(category => (
                 <button
                   key={category.id}
-                  className={`add-item-edit-page__category-chip ${
-                    selectedCategory === category.id ? 'active' : ''
-                  }`}
+                  className={`add-item-edit-page__category-chip ${selectedCategory === category.id ? 'active' : ''
+                    }`}
                   onClick={() => handleCategorySelect(category.id as ClothingCategory)}
                   style={{
                     backgroundColor: selectedCategory === category.id ? category.color : 'transparent',
@@ -320,9 +322,8 @@ const AddItemEditPage: React.FC = () => {
               {predefinedColors.map(color => (
                 <button
                   key={color}
-                  className={`add-item-edit-page__color-dot ${
-                    selectedColors.includes(color) ? 'selected' : ''
-                  }`}
+                  className={`add-item-edit-page__color-dot ${selectedColors.includes(color) ? 'selected' : ''
+                    }`}
                   style={{ backgroundColor: color }}
                   onClick={() => handleColorToggle(color)}
                 />

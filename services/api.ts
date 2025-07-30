@@ -116,6 +116,28 @@ class ApiService {
         imageUrl: '/assets/images/silk-scarf.jpg',
         tags: ['优雅', '配饰'],
         addedDate: new Date('2024-02-05')
+      },
+      {
+        id: '7',
+        name: '碎花连衣裙',
+        category: 'dresses',
+        color: '蓝白',
+        brand: 'ZARA',
+        image: '/assets/images/floral-dress.jpg',
+        imageUrl: '/assets/images/floral-dress.jpg',
+        tags: ['甜美', '约会'],
+        addedDate: new Date('2024-02-10')
+      },
+      {
+        id: '8',
+        name: '黑色小礼服',
+        category: 'dresses',
+        color: '黑色',
+        brand: 'H&M',
+        image: '/assets/images/black-dress.jpg',
+        imageUrl: '/assets/images/black-dress.jpg',
+        tags: ['优雅', '派对'],
+        addedDate: new Date('2024-02-15')
       }
     ];
   }
@@ -439,6 +461,19 @@ class ApiService {
   }
 
   async saveOutfitRecord(userId: string, record: any) {
+    // 在保存前进行验证
+    if (record.items && Array.isArray(record.items)) {
+      const { outfitValidationService } = await import('./outfitValidationService');
+      const validation = outfitValidationService.validateOutfit(record.items);
+      
+      if (!validation.isValid) {
+        return {
+          success: false,
+          error: `穿搭验证失败: ${validation.errors.map(e => e.message).join(', ')}`
+        };
+      }
+    }
+
     return this.request(`/users/${userId}/outfit-diary`, {
       method: 'POST',
       body: JSON.stringify(record),

@@ -28,7 +28,7 @@ export interface ClothingItem {
   lastWorn?: Date;
 }
 
-export type ClothingCategory = 'tops' | 'bottoms' | 'shoes' | 'accessories' | 'outerwear';
+export type ClothingCategory = 'tops' | 'bottoms' | 'shoes' | 'accessories' | 'outerwear' | 'dresses';
 
 export interface OutfitRecommendation {
   id: string;
@@ -114,4 +114,26 @@ export interface ApiResponse<T> {
   data?: T;
   error?: string;
   message?: string;
+}
+
+// 穿搭验证相关类型
+export interface OutfitValidationError {
+  code: string;
+  message: string;
+  category?: ClothingCategory;
+}
+
+export interface OutfitValidationResult {
+  isValid: boolean;
+  errors: OutfitValidationError[];
+  warnings?: OutfitValidationError[];
+}
+
+export interface OutfitComposition {
+  tops: ClothingItem[];
+  bottoms: ClothingItem[];
+  dresses: ClothingItem[];
+  shoes: ClothingItem[];
+  accessories: ClothingItem[];
+  outerwear: ClothingItem[];
 }
