@@ -5,6 +5,7 @@ export interface OutfitItem {
   name: string;
   image: string;
   category: string;
+  subType?: 'regular' | 'outerwear';
   isFromWardrobe?: boolean;
   isNetworkImage?: boolean;
 }

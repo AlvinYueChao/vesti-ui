@@ -138,12 +138,29 @@
     aspect-ratio: 1; // Square aspect ratio for clothing items
     overflow: hidden;
     border-radius: 8px;
+    position: relative;
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
+  }
+
+  &__outerwear-icon {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    font-size: 0.9rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
 
   &__info {

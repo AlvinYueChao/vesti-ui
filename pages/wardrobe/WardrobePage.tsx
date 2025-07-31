@@ -21,8 +21,7 @@ export const WardrobePage: React.FC = () => {
     { id: 'bottoms', label: tCategory('bottoms'), color: '#B5E7FF' },
     { id: 'dresses', label: tCategory('dresses'), color: '#FFD1DC' },
     { id: 'shoes', label: tCategory('shoes'), color: '#FFE5B5' },
-    { id: 'accessories', label: tCategory('accessories'), color: '#E5B5FF' },
-    { id: 'outerwear', label: tCategory('outerwear'), color: '#C5E1A5' }
+    { id: 'accessories', label: tCategory('accessories'), color: '#E5B5FF' }
   ];
   
   // Assuming a fixed user ID for now

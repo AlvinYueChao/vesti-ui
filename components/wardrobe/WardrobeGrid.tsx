@@ -42,6 +42,10 @@ export const WardrobeGrid: React.FC<WardrobeGridProps> = ({
         >
           <div className="wardrobe-item__image">
             <img src={item.image} alt={item.name} />
+            {/* 外套类型的上装显示外套图标 */}
+            {item.category === 'tops' && item.subType === 'outerwear' && (
+              <div className="wardrobe-item__outerwear-icon">🧥</div>
+            )}
           </div>
           {selectMode && (
             <div className="wardrobe-item__select-indicator">

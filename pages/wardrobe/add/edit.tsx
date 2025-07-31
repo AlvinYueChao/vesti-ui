@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useWardrobe } from '../../../hooks/useWardrobe';
-import { ClothingCategory } from '../../../types';
+import { ClothingCategory, TopsSubType } from '../../../types';
 import { useTranslation } from '../../../hooks/useTranslation';
+import { hexToColorName } from '../../../utils/colorUtils';
 
 interface AIAnalysisResult {
   category: ClothingCategory;
@@ -28,8 +29,7 @@ const AddItemEditPage: React.FC = () => {
     { id: 'bottoms', label: tCategory('bottoms'), color: '#B5E7FF' },
     { id: 'dresses', label: tCategory('dresses'), color: '#FFD1DC' },
     { id: 'shoes', label: tCategory('shoes'), color: '#FFE5B5' },
-    { id: 'accessories', label: tCategory('accessories'), color: '#E5B5FF' },
-    { id: 'outerwear', label: tCategory('outerwear'), color: '#C5E1A5' }
+    { id: 'accessories', label: tCategory('accessories'), color: '#E5B5FF' }
   ];
 
   // 检查sessionStorage是否可用
@@ -46,6 +46,7 @@ const AddItemEditPage: React.FC = () => {
 
   const [uploadedImage, setUploadedImage] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<ClothingCategory>('tops');
+  const [selectedSubType, setSelectedSubType] = useState<TopsSubType>('regular');
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState('');
@@ -138,10 +139,15 @@ const AddItemEditPage: React.FC = () => {
 
     setSaving(true);
     try {
+      // 将选中的颜色转换为自然语言
+      const naturalColors = selectedColors.map(color => hexToColorName(color));
+      const colorString = naturalColors.join(', ') || '未知';
+
       await addItem({
         name: itemName,
         category: selectedCategory,
-        color: selectedColors.join(', ') || '未知',
+        subType: selectedCategory === 'tops' ? selectedSubType : undefined,
+        color: colorString,
         brand: brand || undefined,
         image: uploadedImage,
         imageUrl: uploadedImage,
@@ -164,6 +170,10 @@ const AddItemEditPage: React.FC = () => {
 
   const handleCategorySelect = (category: ClothingCategory) => {
     setSelectedCategory(category);
+    // 当选择非tops分类时，重置subType为regular
+    if (category !== 'tops') {
+      setSelectedSubType('regular');
+    }
   };
 
   const handleColorToggle = (color: string) => {
@@ -314,6 +324,33 @@ const AddItemEditPage: React.FC = () => {
               ))}
             </div>
           </div>
+
+          {/* 上装子类型选择 */}
+          {selectedCategory === 'tops' && (
+            <div className="add-item-edit-page__field">
+              <label className="add-item-edit-page__label">上装类型</label>
+              <div className="add-item-edit-page__subtype-chips">
+                <button
+                  className={`add-item-edit-page__subtype-chip ${selectedSubType === 'regular' ? 'active' : ''}`}
+                  onClick={() => setSelectedSubType('regular')}
+                >
+                  普通上装
+                </button>
+                <button
+                  className={`add-item-edit-page__subtype-chip ${selectedSubType === 'outerwear' ? 'active' : ''}`}
+                  onClick={() => setSelectedSubType('outerwear')}
+                >
+                  外套
+                </button>
+              </div>
+              <p className="add-item-edit-page__subtype-hint">
+                {selectedSubType === 'regular'
+                  ? '如T恤、衬衫、毛衣等日常上装'
+                  : '如西装外套、大衣、夹克等可与连衣裙搭配的外套'
+                }
+              </p>
+            </div>
+          )}
 
           {/* 颜色 */}
           <div className="add-item-edit-page__field">

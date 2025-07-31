@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useWardrobe } from '../../../hooks/useWardrobe';
 import { useOutfitDiary } from '../../../hooks/useOutfitDiary';
 import { ClothingItem } from '../../../types';
+import { extractColorFromItem } from '../../../utils/colorUtils';
 
 interface ItemDetailInfo extends ClothingItem {
   description?: string;
@@ -37,11 +38,12 @@ const WardrobeItemDetail: React.FC = () => {
     const wardrobeItem = wardrobeItems.find(item => item.id === id);
     
     if (wardrobeItem) {
+      const naturalColor = extractColorFromItem(wardrobeItem.name, wardrobeItem.color);
       setItemDetail({
         ...wardrobeItem,
-        description: `这是一件${wardrobeItem.color}的${wardrobeItem.name}，来自${wardrobeItem.brand || '未知品牌'}。`,
+        description: `这是一件${naturalColor}的${wardrobeItem.name}，来自${wardrobeItem.brand || '未知品牌'}。`,
         material: getItemMaterial(wardrobeItem.category),
-        stylingTips: getItemStylingTips(wardrobeItem.category, wardrobeItem.color),
+        stylingTips: getItemStylingTips(wardrobeItem.category, naturalColor),
         isInWardrobe: true
       });
       setLoading(false);
@@ -67,11 +69,12 @@ const WardrobeItemDetail: React.FC = () => {
         item.brand === outfitItem!.brand
       );
 
+      const naturalColor = extractColorFromItem(outfitItem.name, outfitItem.color);
       setItemDetail({
         ...outfitItem,
-        description: `这是一件${outfitItem.color}的${outfitItem.name}，推荐用于搭配。`,
+        description: `这是一件${naturalColor}的${outfitItem.name}，推荐用于搭配。`,
         material: outfitItem.material || getItemMaterial(outfitItem.category),
-        stylingTips: getItemStylingTips(outfitItem.category, outfitItem.color),
+        stylingTips: getItemStylingTips(outfitItem.category, naturalColor),
         isInWardrobe: !!matchingWardrobeItem
       });
     }
@@ -118,11 +121,57 @@ const WardrobeItemDetail: React.FC = () => {
     };
     
     const colorTips: Record<string, string> = {
+      // 黑色系
+      '纯黑色': '经典百搭，可以与任何颜色组合',
       '黑色': '经典百搭，可以与任何颜色组合',
+      '深灰黑': '低调沉稳，适合正式场合',
+      
+      // 白色系
+      '纯白色': '清爽干净，适合春夏季节',
       '白色': '清爽干净，适合春夏季节',
+      '米白色': '温和柔软，比纯白更温暖',
+      '米色': '自然舒适，容易搭配',
+      
+      // 蓝色系
+      '正蓝色': '沉稳可靠，商务休闲皆宜',
       '蓝色': '沉稳可靠，商务休闲皆宜',
+      '天蓝色': '清新活力，适合春夏搭配',
+      '海军蓝': '经典正式，适合商务场合',
+      '午夜蓝': '深邃优雅，适合晚装',
+      
+      // 红色系
+      '正红色': '热情活力，适合作为亮点色',
       '红色': '热情活力，适合作为亮点色',
-      '灰色': '低调优雅，容易搭配'
+      '珊瑚红': '温暖活泼，适合春夏季节',
+      '深红色': '成熟稳重，适合秋冬搭配',
+      
+      // 灰色系
+      '中灰色': '低调优雅，容易搭配',
+      '灰色': '低调优雅，容易搭配',
+      '浅灰色': '温和中性，适合日常搭配',
+      '深灰色': '沉稳大气，适合正式场合',
+      
+      // 绿色系
+      '正绿色': '自然清新，适合休闲搭配',
+      '绿色': '自然清新，适合休闲搭配',
+      '草绿色': '活力青春，适合春夏季节',
+      '森林绿': '沉稳自然，适合秋冬搭配',
+      
+      // 黄色系
+      '金黄色': '明亮温暖，适合作为点缀色',
+      '黄色': '明亮温暖，适合作为点缀色',
+      '柠檬黄': '清新活泼，适合春夏搭配',
+      
+      // 紫色系
+      '紫色': '神秘优雅，适合晚装或特殊场合',
+      '紫罗兰': '浪漫优雅，适合约会搭配',
+      '薰衣草色': '温柔浪漫，适合春夏季节',
+      
+      // 棕色系
+      '棕色': '温暖自然，适合秋冬搭配',
+      '深棕色': '成熟稳重，适合正式场合',
+      '茶色': '温和自然，容易搭配',
+      '驼色': '经典优雅，适合秋冬外套'
     };
 
     const tips = baseTips[category] || ['注意整体搭配的和谐性'];
@@ -300,7 +349,14 @@ const WardrobeItemDetail: React.FC = () => {
           <h2 className="item-detail-page__name">{itemDetail.name}</h2>
           <div className="item-detail-page__tags">
             <span className="item-detail-page__tag">{itemDetail.category}</span>
-            <span className="item-detail-page__tag">{itemDetail.color}</span>
+            {/* 如果是外套类型的上装，显示外套标签 */}
+            {itemDetail.category === 'tops' && itemDetail.subType === 'outerwear' && (
+              <span className="item-detail-page__tag item-detail-page__tag--outerwear">外套</span>
+            )}
+            {/* 使用自然语言显示颜色 */}
+            <span className="item-detail-page__tag">
+              {extractColorFromItem(itemDetail.name, itemDetail.color)}
+            </span>
             {itemDetail.material && (
               <span className="item-detail-page__tag">{itemDetail.material}</span>
             )}

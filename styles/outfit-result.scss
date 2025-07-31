@@ -177,6 +177,23 @@
               }
             }
 
+            // SubType Icon
+            .outfit-item__subtype-icon {
+              position: absolute;
+              top: 4px;
+              left: 4px;
+              font-size: 0.8rem;
+              background-color: rgba(255, 255, 255, 0.9);
+              border-radius: 50%;
+              width: 18px;
+              height: 18px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              z-index: 2;
+              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            }
+
             // Lock Button
             .outfit-item__lock-btn {
               position: absolute;
@@ -224,6 +241,20 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+
+            .outfit-item__subtype-tag {
+              font-size: 0.6rem;
+              background-color: #9c27b0;
+              color: white;
+              padding: 1px 6px;
+              border-radius: 8px;
+              font-weight: 600;
+              white-space: nowrap;
+            }
           }
 
           .outfit-item__placeholder {
@@ -599,6 +630,12 @@
                 padding: 1px 4px;
               }
 
+              .outfit-item__subtype-icon {
+                font-size: 0.7rem;
+                width: 16px;
+                height: 16px;
+              }
+
               .outfit-item__lock-btn {
                 width: 20px;
                 height: 20px;
@@ -613,6 +650,11 @@
             .outfit-item__name {
               font-size: 0.7rem;
               max-width: 60px;
+
+              .outfit-item__subtype-tag {
+                font-size: 0.5rem;
+                padding: 1px 4px;
+              }
             }
 
             .outfit-item__placeholder {

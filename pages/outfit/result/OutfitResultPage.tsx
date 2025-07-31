@@ -8,6 +8,7 @@ interface OutfitItem {
   name: string;
   image: string;
   category: string;
+  subType?: 'regular' | 'outerwear';
   isFromWardrobe?: boolean;
   isNetworkImage?: boolean;
   isLocked?: boolean;
@@ -30,14 +31,15 @@ export const OutfitResultPage: React.FC<OutfitResultPageProps> = ({
       id: '1',
       name: '蓝色条纹T恤',
       image: '/assets/images/top-blue.jpg',
-      category: 'top',
+      category: 'tops',
+      subType: 'regular',
       isFromWardrobe: true
     },
     {
       id: '2', 
       name: '白色短裤',
       image: '/assets/images/bottom-white.jpg',
-      category: 'bottom',
+      category: 'bottoms',
       isNetworkImage: true
     },
     {
@@ -45,6 +47,14 @@ export const OutfitResultPage: React.FC<OutfitResultPageProps> = ({
       name: '棕色凉鞋',
       image: '/assets/images/shoes-brown.jpg', 
       category: 'shoes',
+      isFromWardrobe: true
+    },
+    {
+      id: '4',
+      name: '黑色西装外套',
+      image: '/assets/images/jacket-black.jpg',
+      category: 'tops',
+      subType: 'outerwear',
       isFromWardrobe: true
     }
   ],
@@ -143,6 +153,11 @@ export const OutfitResultPage: React.FC<OutfitResultPageProps> = ({
                     <div className="outfit-item__source-tag outfit-item__source-tag--network">网图</div>
                   )}
                   
+                  {/* SubType Icon */}
+                  {item.subType === 'outerwear' && (
+                    <div className="outfit-item__subtype-icon">🧥</div>
+                  )}
+                  
                   {/* Lock Icon */}
                   <button 
                     className={`outfit-item__lock-btn ${item.isLocked ? 'outfit-item__lock-btn--locked' : ''}`}
@@ -162,7 +177,12 @@ export const OutfitResultPage: React.FC<OutfitResultPageProps> = ({
                     )}
                   </button>
                 </div>
-                <div className="outfit-item__name">{item.name}</div>
+                <div className="outfit-item__name">
+                  {item.name}
+                  {item.subType === 'outerwear' && (
+                    <span className="outfit-item__subtype-tag">外套</span>
+                  )}
+                </div>
               </div>
             ))}
             

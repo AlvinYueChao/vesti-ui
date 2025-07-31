@@ -177,6 +177,40 @@
     }
   }
 
+  &__subtype-chips {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__subtype-chip {
+    padding: 0.5rem 1rem;
+    border: 2px solid #9c27b0;
+    border-radius: 1.5rem;
+    background: transparent;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #9c27b0;
+
+    &.active {
+      background: #9c27b0;
+      color: white;
+    }
+
+    &:not(.active):hover {
+      background: rgba(156, 39, 176, 0.1);
+    }
+  }
+
+  &__subtype-hint {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin: 0;
+    font-style: italic;
+  }
+
   &__color-palette {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
@@ -333,6 +367,19 @@
     &__category-chip {
       padding: 0.375rem 0.75rem;
       font-size: 0.8rem;
+    }
+
+    &__subtype-chips {
+      gap: 0.5rem;
+    }
+
+    &__subtype-chip {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    &__subtype-hint {
+      font-size: 0.75rem;
     }
 
     &__color-palette {

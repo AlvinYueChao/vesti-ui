@@ -55,6 +55,7 @@ class ApiService {
         id: '1',
         name: '条纹衬衫',
         category: 'tops',
+        subType: 'regular',
         color: '蓝白',
         brand: 'UNIQLO',
         image: '/assets/images/striped-shirt.jpg',
@@ -66,6 +67,7 @@ class ApiService {
         id: '2',
         name: '白色T恤',
         category: 'tops',
+        subType: 'regular',
         color: '白色',
         brand: 'H&M',
         image: '/assets/images/white-tee.jpg',
@@ -138,6 +140,45 @@ class ApiService {
         imageUrl: '/assets/images/black-dress.jpg',
         tags: ['优雅', '派对'],
         addedDate: new Date('2024-02-15')
+      },
+      {
+        id: '9',
+        name: '长款呢大衣',
+        category: 'tops',
+        subType: 'outerwear',
+        color: '驼色',
+        brand: 'MaxMara',
+        material: '羊毛',
+        image: '/assets/images/wool-coat.jpg',
+        imageUrl: '/assets/images/wool-coat.jpg',
+        tags: ['外套', '保暖', '优雅'],
+        addedDate: new Date('2024-02-20')
+      },
+      {
+        id: '10',
+        name: '黑色西装外套',
+        category: 'tops',
+        subType: 'outerwear',
+        color: '黑色',
+        brand: 'ZARA',
+        material: '聚酯纤维',
+        image: '/assets/images/black-blazer.jpg',
+        imageUrl: '/assets/images/black-blazer.jpg',
+        tags: ['外套', '正式', '商务'],
+        addedDate: new Date('2024-02-25')
+      },
+      {
+        id: '11',
+        name: '牛仔夹克',
+        category: 'tops',
+        subType: 'outerwear',
+        color: '蓝色',
+        brand: 'Levi\'s',
+        material: '牛仔布',
+        image: '/assets/images/denim-jacket.jpg',
+        imageUrl: '/assets/images/denim-jacket.jpg',
+        tags: ['外套', '休闲', '经典'],
+        addedDate: new Date('2024-03-01')
       }
     ];
   }
