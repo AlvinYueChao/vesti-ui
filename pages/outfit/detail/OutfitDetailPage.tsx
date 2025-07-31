@@ -6,10 +6,10 @@ const OutfitDetailPage: React.FC = () => {
   const router = useRouter();
   const [outfitDetail, setOutfitDetail] = useState<OutfitRecord | null>(null);
   const [pageLoading, setPageLoading] = useState(true);
-  
+
   // 从路由参数获取outfitId
   const { id: outfitId } = router.query;
-  
+
   // 使用穿搭日记hook
   const { records, loading: dataLoading, deleteOutfitRecord } = useOutfitDiary('user-123');
 
@@ -68,9 +68,9 @@ const OutfitDetailPage: React.FC = () => {
 
   const handleDeleteRecord = async () => {
     if (!outfitDetail || !outfitId) return;
-    
+
     const confirmMessage = `确定要删除 ${new Date(outfitDetail.date).getMonth() + 1}月${new Date(outfitDetail.date).getDate()}日 的穿搭记录吗？\n\n删除后将无法恢复。`;
-    
+
     if (confirm(confirmMessage)) {
       try {
         await deleteOutfitRecord(outfitId as string);
@@ -91,7 +91,7 @@ const OutfitDetailPage: React.FC = () => {
       category: outfitDetail?.items.map(item => item.category).join(',') || '',
       source: 'outfit-detail'
     });
-    
+
     router.push(`/discover?${styleParams.toString()}`);
   };
 
@@ -129,7 +129,7 @@ const OutfitDetailPage: React.FC = () => {
         <div className="outfit-detail-page__error">
           <div className="outfit-detail-page__error-icon">😔</div>
           <div className="outfit-detail-page__error-text">穿搭记录不存在</div>
-          <button 
+          <button
             className="outfit-detail-page__error-btn"
             onClick={handleBack}
           >
@@ -192,7 +192,7 @@ const OutfitDetailPage: React.FC = () => {
           <h3 className="outfit-detail-page__items-title">套装单品 ({outfitDetail.items.length})</h3>
           <div className="outfit-detail-page__items-list">
             {outfitDetail.items.map((item, index) => (
-              <div 
+              <div
                 key={item.id}
                 className="outfit-detail-page__item"
                 onClick={() => handleItemClick(item.id)}
@@ -217,13 +217,13 @@ const OutfitDetailPage: React.FC = () => {
 
       {/* 底部操作栏 */}
       <div className="outfit-detail-page__actions">
-        <button 
+        <button
           className="outfit-detail-page__action-btn outfit-detail-page__action-btn--secondary"
           onClick={handleDeleteRecord}
         >
           删除记录
         </button>
-        <button 
+        <button
           className="outfit-detail-page__action-btn outfit-detail-page__action-btn--primary"
           onClick={handleFindSimilar}
         >

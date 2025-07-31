@@ -4,6 +4,7 @@ import { OutfitResultPage } from './OutfitResultPage';
 import { useWardrobe } from '../../../hooks/useWardrobe';
 import { useOutfitDiary } from '../../../hooks/useOutfitDiary';
 import { outfitService, OutfitRecommendation } from '../../../services/outfitService';
+import { hexToColorName, extractColorFromItem, convertColorsToNames } from '../../../utils/colorUtils';
 
 const OutfitResultWrapper: React.FC = () => {
   const router = useRouter();
@@ -73,19 +74,19 @@ const OutfitResultWrapper: React.FC = () => {
 
   const handleGenerateNewOutfit = async (lockedItems: any[]) => {
     if (!wardrobeItems) return;
-    
+
     setIsGenerating(true);
-    
+
     try {
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       let newRecommendation: OutfitRecommendation;
-      
+
       if (type === 'scenario' && scenarioId) {
         newRecommendation = outfitService.generateScenarioOutfitWithLocked(
-          scenarioId as string, 
-          wardrobeItems, 
+          scenarioId as string,
+          wardrobeItems,
           lockedItems,
           recommendation?.items || []
         );
@@ -93,8 +94,8 @@ const OutfitResultWrapper: React.FC = () => {
         const selectedItem = wardrobeItems.find(item => item.id === itemId);
         if (selectedItem) {
           newRecommendation = outfitService.generateItemBasedOutfitWithLocked(
-            selectedItem, 
-            wardrobeItems, 
+            selectedItem,
+            wardrobeItems,
             lockedItems,
             recommendation?.items || []
           );
@@ -121,18 +122,18 @@ const OutfitResultWrapper: React.FC = () => {
 
   const handleAcceptOutfit = async (items: any[]) => {
     if (isSaving) return; // 防止重复点击
-    
+
     setIsSaving(true);
-    
+
     try {
       console.log('开始保存穿搭记录...', items);
-      
+
       // 获取当前日期信息
       const today = new Date();
       const dateStr = today.toISOString().split('T')[0];
       const dayOfWeek = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'][today.getDay()];
-      
-      // 提取颜色信息（简化处理，可以后续优化）
+
+      // 提取颜色信息（使用颜色工具函数）
       const extractColors = (items: any[]) => {
         const colorMap: Record<string, string> = {
           '蓝': '#4A90E2',
@@ -146,7 +147,7 @@ const OutfitResultWrapper: React.FC = () => {
           '棕': '#8B4513',
           '粉': '#FFB6C1'
         };
-        
+
         const colors: string[] = [];
         items.forEach(item => {
           if (item.name) {
@@ -157,31 +158,26 @@ const OutfitResultWrapper: React.FC = () => {
             });
           }
         });
-        
+
         return colors.length > 0 ? colors : ['#CCCCCC']; // 默认颜色
       };
 
       const colors = extractColors(items);
-      
-      // 从单品名称中提取颜色
-      const extractItemColor = (itemName: string) => {
-        const colorNames = ['蓝', '白', '黑', '红', '灰', '绿', '黄', '紫', '棕', '粉'];
-        const foundColor = colorNames.find(color => itemName.includes(color));
-        return foundColor ? foundColor + '色' : null;
-      };
-      
+
       // 转换 items 数据结构以匹配详情页面期望的格式
       const formattedItems = items.map(item => ({
         id: item.id,
         name: item.name,
-        category: item.category === 'tops' ? '上装' : 
-                 item.category === 'bottoms' ? '下装' :
-                 item.category === 'shoes' ? '鞋子' :
-                 item.category === 'accessories' ? '配饰' :
-                 item.category === 'outerwear' ? '外套' : '其他',
-        color: extractItemColor(item.name) || '未知',
-        material: '棉', // 简化处理，实际应从item数据中获取
-        image: item.image
+        category: item.category, // 保持原始category值
+        color: extractColorFromItem(item.name, item.color), // 使用颜色工具函数转换为自然语言
+        material: item.material || '棉', // 简化处理，实际应从item数据中获取
+        image: item.image,
+        imageUrl: item.image, // 添加必需的imageUrl属性
+        tags: item.tags || [], // 添加必需的tags属性
+        addedDate: item.addedDate || new Date(), // 添加必需的addedDate属性
+        brand: item.brand,
+        subType: item.subType,
+        lastWorn: item.lastWorn
       }));
 
       // 创建穿搭记录
@@ -216,12 +212,12 @@ const OutfitResultWrapper: React.FC = () => {
       // 保存到穿搭日记
       const savedRecord = await saveOutfitRecord(outfitRecord);
       console.log('保存成功:', savedRecord);
-      
+
       // 短暂延迟后跳转，确保保存完成
       setTimeout(() => {
         router.push('/outfit/diary?refresh=true');
       }, 100);
-      
+
     } catch (error) {
       console.error('保存穿搭记录失败:', error);
       alert('保存失败，请重试');

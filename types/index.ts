@@ -18,6 +18,7 @@ export interface ClothingItem {
   id: string;
   name: string;
   category: ClothingCategory;
+  subType?: TopsSubType; // 仅对上装有效，区分普通上装和外套
   color: string;
   brand?: string;
   material?: string;
@@ -28,7 +29,10 @@ export interface ClothingItem {
   lastWorn?: Date;
 }
 
-export type ClothingCategory = 'tops' | 'bottoms' | 'shoes' | 'accessories' | 'outerwear';
+export type ClothingCategory = 'tops' | 'bottoms' | 'dresses' | 'shoes' | 'accessories';
+
+// 上装子类型，用于区分是否可以与连衣裙搭配
+export type TopsSubType = 'regular' | 'outerwear'; // regular: 普通上装, outerwear: 外套（可与连衣裙搭配）
 
 export interface OutfitRecommendation {
   id: string;
@@ -114,4 +118,35 @@ export interface ApiResponse<T> {
   data?: T;
   error?: string;
   message?: string;
+}
+
+// 穿搭验证相关类型
+export interface OutfitValidationError {
+  code: string;
+  message: string;
+  category?: ClothingCategory;
+}
+
+export interface OutfitValidationResult {
+  isValid: boolean;
+  errors: OutfitValidationError[];
+  warnings?: OutfitValidationError[];
+}
+
+export interface OutfitComposition {
+  tops: ClothingItem[];
+  bottoms: ClothingItem[];
+  dresses: ClothingItem[];
+  shoes: ClothingItem[];
+  accessories: ClothingItem[];
+}
+
+// 穿搭规则类型
+export interface OutfitRule {
+  id: string;
+  name: string;
+  combination: ClothingCategory[];
+  isValid: boolean;
+  note: string;
+  allowsAccessories?: boolean;
 }

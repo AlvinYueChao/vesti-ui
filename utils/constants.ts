@@ -11,6 +11,8 @@ export const CLOTHING_CATEGORIES = {
   BOTTOMS: 'bottoms', 
   SHOES: 'shoes',
   ACCESSORIES: 'accessories',
+  OUTERWEAR: 'outerwear',
+  DRESSES: 'dresses',
 } as const;
 
 export const STYLE_TYPES = {

@@ -18,9 +18,11 @@ export const getCategoryColor = (category: string): string => {
   const colors: Record<string, string> = {
     all: '#FF6B6B',
     tops: '#FFB5B5',
-    bottoms: '#B5E7FF', 
+    bottoms: '#B5E7FF',
+    dresses: '#FFD1DC',
     shoes: '#FFE5B5',
     accessories: '#E5B5FF',
+    outerwear: '#C5E1A5',
   };
   return colors[category] || '#F0F2F5';
 };

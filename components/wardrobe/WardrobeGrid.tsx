@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useRouter } from 'next/router';
 import { ClothingItem } from '../../types';
 import { Card } from '../ui/Card';
 
@@ -16,6 +17,8 @@ export const WardrobeGrid: React.FC<WardrobeGridProps> = ({
   selectMode = false, 
   onItemSelect 
 }) => {
+  const router = useRouter();
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -23,6 +26,9 @@ export const WardrobeGrid: React.FC<WardrobeGridProps> = ({
   const handleItemClick = (itemId: string) => {
     if (selectMode && onItemSelect) {
       onItemSelect(itemId);
+    } else if (!selectMode) {
+      // 普通模式下点击单品进入详情页
+      router.push(`/wardrobe/item/${itemId}`);
     }
   };
 
@@ -31,21 +37,24 @@ export const WardrobeGrid: React.FC<WardrobeGridProps> = ({
       {items.map(item => (
         <Card 
           key={item.id} 
-          className={`wardrobe-item ${selectMode ? 'wardrobe-item--selectable' : ''}`}
+          className={`wardrobe-item wardrobe-item--clickable ${selectMode ? 'wardrobe-item--selectable' : ''}`}
           onClick={() => handleItemClick(item.id)}
         >
           <div className="wardrobe-item__image">
             <img src={item.image} alt={item.name} />
-          </div>
-          <div className="wardrobe-item__info">
-            <h3 className="wardrobe-item__name">{item.name}</h3>
-            <p className="wardrobe-item__details">
-              {item.color} {item.brand && `• ${item.brand}`}
-            </p>
+            {/* 外套类型的上装显示外套图标 */}
+            {item.category === 'tops' && item.subType === 'outerwear' && (
+              <div className="wardrobe-item__outerwear-icon">🧥</div>
+            )}
           </div>
           {selectMode && (
             <div className="wardrobe-item__select-indicator">
               <span>点击选择</span>
+            </div>
+          )}
+          {!selectMode && (
+            <div className="wardrobe-item__info">
+              <span className="wardrobe-item__name">{item.name}</span>
             </div>
           )}
         </Card>

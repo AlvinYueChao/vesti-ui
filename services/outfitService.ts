@@ -5,6 +5,7 @@ export interface OutfitItem {
   name: string;
   image: string;
   category: string;
+  subType?: 'regular' | 'outerwear';
   isFromWardrobe?: boolean;
   isNetworkImage?: boolean;
 }
@@ -16,14 +17,14 @@ export interface OutfitRecommendation {
   hasNetworkImages: boolean;
 }
 
-// 场景所需的基本单品类别
+// 场景所需的基本单品类别（支持连衣裙作为替代选项）
 const SCENARIO_REQUIREMENTS: Record<string, ClothingCategory[]> = {
-  'work-commute': ['tops', 'bottoms', 'shoes'],
-  'weekend-date': ['tops', 'bottoms', 'shoes'],
-  'beach-vacation': ['tops', 'bottoms', 'shoes'],
-  'business-meeting': ['tops', 'bottoms', 'shoes'],
-  'casual-shopping': ['tops', 'bottoms', 'shoes'],
-  'party-night': ['tops', 'bottoms', 'shoes']
+  'work-commute': ['tops', 'bottoms', 'shoes'], // 或 ['dresses', 'shoes']
+  'weekend-date': ['tops', 'bottoms', 'shoes'], // 或 ['dresses', 'shoes']
+  'beach-vacation': ['tops', 'bottoms', 'shoes'], // 或 ['dresses', 'shoes']
+  'business-meeting': ['tops', 'bottoms', 'shoes'], // 或 ['dresses', 'shoes']
+  'casual-shopping': ['tops', 'bottoms', 'shoes'], // 或 ['dresses', 'shoes']
+  'party-night': ['dresses', 'shoes'] // 派对优先推荐连衣裙
 };
 
 // 网图备选单品
@@ -70,8 +71,16 @@ const NETWORK_FALLBACK_ITEMS: Record<string, Record<ClothingCategory, OutfitItem
         isNetworkImage: true
       }
     ],
-    accessories: [],
-    outerwear: []
+    dresses: [
+      {
+        id: 'net-work-dress-1',
+        name: '深蓝色职业连衣裙',
+        image: '/assets/images/network/work-dress-navy.jpg',
+        category: 'dresses',
+        isNetworkImage: true
+      }
+    ],
+    accessories: []
   },
   'weekend-date': {
     tops: [
@@ -101,8 +110,16 @@ const NETWORK_FALLBACK_ITEMS: Record<string, Record<ClothingCategory, OutfitItem
         isNetworkImage: true
       }
     ],
-    accessories: [],
-    outerwear: []
+    dresses: [
+      {
+        id: 'net-date-dress-1',
+        name: '碎花连衣裙',
+        image: '/assets/images/network/date-dress-floral.jpg',
+        category: 'dresses',
+        isNetworkImage: true
+      }
+    ],
+    accessories: []
   },
   'beach-vacation': {
     tops: [
@@ -132,8 +149,16 @@ const NETWORK_FALLBACK_ITEMS: Record<string, Record<ClothingCategory, OutfitItem
         isNetworkImage: true
       }
     ],
-    accessories: [],
-    outerwear: []
+    dresses: [
+      {
+        id: 'net-beach-dress-1',
+        name: '白色度假连衣裙',
+        image: '/assets/images/network/beach-dress-white.jpg',
+        category: 'dresses',
+        isNetworkImage: true
+      }
+    ],
+    accessories: []
   },
   'business-meeting': {
     tops: [
@@ -163,8 +188,16 @@ const NETWORK_FALLBACK_ITEMS: Record<string, Record<ClothingCategory, OutfitItem
         isNetworkImage: true
       }
     ],
-    accessories: [],
-    outerwear: []
+    dresses: [
+      {
+        id: 'net-business-dress-1',
+        name: '黑色商务连衣裙',
+        image: '/assets/images/network/business-dress-black.jpg',
+        category: 'dresses',
+        isNetworkImage: true
+      }
+    ],
+    accessories: []
   },
   'casual-shopping': {
     tops: [
@@ -194,19 +227,19 @@ const NETWORK_FALLBACK_ITEMS: Record<string, Record<ClothingCategory, OutfitItem
         isNetworkImage: true
       }
     ],
-    accessories: [],
-    outerwear: []
-  },
-  'party-night': {
-    tops: [
+    dresses: [
       {
-        id: 'net-party-top-1',
-        name: '黑色小礼服',
-        image: '/assets/images/network/party-dress-black.jpg',
-        category: 'tops',
+        id: 'net-casual-dress-1',
+        name: '休闲连衣裙',
+        image: '/assets/images/network/casual-dress.jpg',
+        category: 'dresses',
         isNetworkImage: true
       }
     ],
+    accessories: []
+  },
+  'party-night': {
+    tops: [],
     bottoms: [],
     shoes: [
       {
@@ -217,8 +250,23 @@ const NETWORK_FALLBACK_ITEMS: Record<string, Record<ClothingCategory, OutfitItem
         isNetworkImage: true
       }
     ],
-    accessories: [],
-    outerwear: []
+    dresses: [
+      {
+        id: 'net-party-dress-1',
+        name: '黑色小礼服',
+        image: '/assets/images/network/party-dress-black.jpg',
+        category: 'dresses',
+        isNetworkImage: true
+      },
+      {
+        id: 'net-party-dress-2',
+        name: '红色晚礼服',
+        image: '/assets/images/network/party-dress-red.jpg',
+        category: 'dresses',
+        isNetworkImage: true
+      }
+    ],
+    accessories: []
   }
 };
 
@@ -229,27 +277,71 @@ class OutfitService {
     const selectedItems: OutfitItem[] = [];
     const missingCategories: string[] = [];
 
-    // 尝试从衣橱中选择每个类别的单品
-    for (const category of requiredCategories) {
-      const categoryItems = wardrobeItems.filter(item => item.category === category);
-      
-      if (categoryItems.length > 0) {
-        // 选择最适合场景的单品（这里简化为随机选择）
-        const selectedItem = this.selectBestItemForScenario(categoryItems, scenarioId);
+    // 检查是否有连衣裙可用，连衣裙可以替代上装+下装的组合
+    const dresses = wardrobeItems.filter(item => item.category === 'dresses');
+    const hasDresses = dresses.length > 0;
+
+    // 如果场景适合连衣裙且有连衣裙可用，优先考虑连衣裙搭配
+    if (hasDresses && this.isScenarioSuitableForDress(scenarioId)) {
+      const selectedDress = this.selectBestItemForScenario(dresses, scenarioId);
+      selectedItems.push({
+        id: selectedDress.id,
+        name: selectedDress.name,
+        image: selectedDress.imageUrl,
+        category: selectedDress.category,
+        isFromWardrobe: true
+      });
+
+      // 连衣裙搭配只需要鞋子
+      const shoes = wardrobeItems.filter(item => item.category === 'shoes');
+      if (shoes.length > 0) {
+        const selectedShoes = this.selectBestItemForScenario(shoes, scenarioId);
         selectedItems.push({
-          id: selectedItem.id,
-          name: selectedItem.name,
-          image: selectedItem.imageUrl,
-          category: selectedItem.category,
+          id: selectedShoes.id,
+          name: selectedShoes.name,
+          image: selectedShoes.imageUrl,
+          category: selectedShoes.category,
           isFromWardrobe: true
         });
       } else {
-        missingCategories.push(category);
+        missingCategories.push('shoes');
+      }
+
+      // 可选配饰
+      const accessories = wardrobeItems.filter(item => item.category === 'accessories');
+      if (accessories.length > 0) {
+        const selectedAccessory = this.selectBestItemForScenario(accessories, scenarioId);
+        selectedItems.push({
+          id: selectedAccessory.id,
+          name: selectedAccessory.name,
+          image: selectedAccessory.imageUrl,
+          category: selectedAccessory.category,
+          isFromWardrobe: true
+        });
+      }
+    } else {
+      // 传统的上装+下装+鞋子搭配
+      for (const category of requiredCategories) {
+        const categoryItems = wardrobeItems.filter(item => item.category === category);
+        
+        if (categoryItems.length > 0) {
+          const selectedItem = this.selectBestItemForScenario(categoryItems, scenarioId);
+          selectedItems.push({
+            id: selectedItem.id,
+            name: selectedItem.name,
+            image: selectedItem.imageUrl,
+            category: selectedItem.category,
+            isFromWardrobe: true
+          });
+        } else {
+          missingCategories.push(category);
+        }
       }
     }
 
     // 计算完整度
-    const completeness = selectedItems.length / requiredCategories.length;
+    const expectedItemCount = hasDresses && this.isScenarioSuitableForDress(scenarioId) ? 2 : requiredCategories.length;
+    const completeness = selectedItems.length / expectedItemCount;
 
     return {
       items: selectedItems,
@@ -470,12 +562,12 @@ class OutfitService {
         return ['bottoms', 'shoes'];
       case 'bottoms':
         return ['tops', 'shoes'];
+      case 'dresses':
+        return ['shoes']; // 连衣裙只需要搭配鞋子
       case 'shoes':
-        return ['tops', 'bottoms'];
-      case 'outerwear':
-        return ['tops', 'bottoms', 'shoes'];
+        return ['tops', 'bottoms']; // 鞋子需要上装+下装或连衣裙，这里先返回上装+下装
       case 'accessories':
-        return ['tops', 'bottoms'];
+        return ['tops', 'bottoms', 'shoes']; // 配饰需要完整的基础搭配
       default:
         return ['tops', 'bottoms', 'shoes'];
     }
@@ -494,6 +586,17 @@ class OutfitService {
     // 这里可以实现颜色搭配、风格匹配等逻辑
     // 目前简化为随机选择
     return availableItems[Math.floor(Math.random() * availableItems.length)];
+  }
+
+  // 判断场景是否适合连衣裙
+  private isScenarioSuitableForDress(scenarioId: string): boolean {
+    const dressSuitableScenarios = [
+      'weekend-date',
+      'party-night',
+      'beach-vacation',
+      'casual-shopping'
+    ];
+    return dressSuitableScenarios.includes(scenarioId);
   }
 
   // 生成AI评论

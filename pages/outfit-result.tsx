@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { ClothingItem } from '../types';
+import { outfitValidationService } from '../services/outfitValidationService';
+import { translationService } from '../services/translationService';
 
 interface OutfitItem {
   id: string;
@@ -14,6 +17,10 @@ interface OutfitRecommendation {
   items: OutfitItem[];
   description: string;
   suitability: string;
+  validationResult?: {
+    isValid: boolean;
+    errors: string[];
+  };
 }
 
 const OutfitResultPage: React.FC = () => {
@@ -34,9 +41,9 @@ const OutfitResultPage: React.FC = () => {
           {
             id: 'rec-1',
             items: [
-              { id: 'item-1', name: '白色衬衫', category: '上装', color: '白色', image: '/assets/images/item-1.jpg' },
-              { id: 'item-2', name: '黑色西装裤', category: '下装', color: '黑色', image: '/assets/images/item-2.jpg' },
-              { id: 'item-3', name: '黑色皮鞋', category: '鞋子', color: '黑色', image: '/assets/images/item-3.jpg' }
+              { id: 'item-1', name: '白色衬衫', category: 'tops', color: '白色', image: '/assets/images/striped-shirt.jpg' },
+              { id: 'item-2', name: '黑色西装裤', category: 'bottoms', color: '黑色', image: '/assets/images/white-shorts.jpg' },
+              { id: 'item-3', name: '黑色皮鞋', category: 'shoes', color: '黑色', image: '/assets/images/black-suit-pants.jpg' }
             ],
             description: '经典商务搭配，专业而优雅',
             suitability: '95%'
@@ -44,16 +51,31 @@ const OutfitResultPage: React.FC = () => {
           {
             id: 'rec-2',
             items: [
-              { id: 'item-4', name: '蓝色衬衫', category: '上装', color: '蓝色', image: '/assets/images/item-4.jpg' },
-              { id: 'item-5', name: '灰色西装裤', category: '下装', color: '灰色', image: '/assets/images/item-5.jpg' },
-              { id: 'item-6', name: '棕色皮鞋', category: '鞋子', color: '棕色', image: '/assets/images/item-6.jpg' }
+              { id: 'item-4', name: '碎花连衣裙', category: 'dresses', color: '蓝白', image: '/assets/images/floral-dress.jpg' },
+              { id: 'item-5', name: '小白鞋', category: 'shoes', color: '白色', image: '/assets/images/white-sneakers.jpg' }
+            ],
+            description: '清新甜美的连衣裙搭配，适合约会',
+            suitability: '92%'
+          },
+          {
+            id: 'rec-3',
+            items: [
+              { id: 'item-6', name: '蓝色衬衫', category: 'tops', color: '蓝色', image: '/assets/images/pink-shirt.jpg' },
+              { id: 'item-7', name: '灰色西装裤', category: 'bottoms', color: '灰色', image: '/assets/images/jeans.jpg' },
+              { id: 'item-8', name: '棕色皮鞋', category: 'shoes', color: '棕色', image: '/assets/images/red-t-shirt.jpg' }
             ],
             description: '温和的商务风格，适合日常工作',
             suitability: '88%'
           }
         ];
         
-        setRecommendations(mockRecommendations);
+        // 为每个推荐添加验证结果
+        const validatedRecommendations = mockRecommendations.map(rec => ({
+          ...rec,
+          validationResult: validateOutfit(rec.items)
+        }));
+        
+        setRecommendations(validatedRecommendations);
         setLoading(false);
       }, 1000);
     };
@@ -69,6 +91,26 @@ const OutfitResultPage: React.FC = () => {
     setSelectedOutfit(outfitId);
   };
 
+  const validateOutfit = (items: OutfitItem[]) => {
+    // 转换为ClothingItem格式进行验证
+    const clothingItems: ClothingItem[] = items.map(item => ({
+      id: item.id,
+      name: item.name,
+      category: item.category as any,
+      color: item.color,
+      image: item.image,
+      imageUrl: item.image,
+      tags: [],
+      addedDate: new Date()
+    }));
+
+    const validation = outfitValidationService.validateOutfit(clothingItems);
+    return {
+      isValid: validation.isValid,
+      errors: validation.errors.map(error => error.message)
+    };
+  };
+
   const handleConfirmOutfit = () => {
     if (!selectedOutfit) {
       alert('请先选择一套搭配');
@@ -78,6 +120,14 @@ const OutfitResultPage: React.FC = () => {
     // 保存选择的搭配到穿搭日记
     const selectedRecommendation = recommendations.find(rec => rec.id === selectedOutfit);
     if (selectedRecommendation) {
+      // 验证穿搭
+      const validation = validateOutfit(selectedRecommendation.items);
+      
+      if (!validation.isValid) {
+        alert(`穿搭不完整：${validation.errors.join(', ')}`);
+        return;
+      }
+
       // 这里应该调用API保存搭配记录
       console.log('保存搭配记录:', selectedRecommendation);
       
@@ -144,6 +194,18 @@ const OutfitResultPage: React.FC = () => {
               </div>
               
               <p className="outfit-card__description">{recommendation.description}</p>
+              
+              {/* 验证结果显示 */}
+              {recommendation.validationResult && !recommendation.validationResult.isValid && (
+                <div className="outfit-card__validation-errors">
+                  <span className="validation-warning">⚠️ 穿搭提醒：</span>
+                  <ul>
+                    {recommendation.validationResult.errors.map((error, index) => (
+                      <li key={index}>{error}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               
               {selectedOutfit === recommendation.id && (
                 <div className="outfit-card__selected-indicator">

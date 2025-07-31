@@ -138,6 +138,7 @@
     aspect-ratio: 1; // Square aspect ratio for clothing items
     overflow: hidden;
     border-radius: 8px;
+    position: relative;
 
     img {
       width: 100%;
@@ -146,16 +147,53 @@
     }
   }
 
+  &__outerwear-icon {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    font-size: 0.9rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
   &__info {
-    padding: 0.5rem;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    color: white;
+    padding: 1rem 0.5rem 0.5rem;
+    border-radius: 0 0 8px 8px;
   }
 
   &__name {
-    font-weight: bold;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
-  &__details {
-    color: #666;
+  &--clickable {
+    cursor: pointer;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
   }
 
   &--selectable {

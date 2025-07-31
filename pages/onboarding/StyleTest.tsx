@@ -53,8 +53,11 @@ export const StyleTest: React.FC<StyleTestProps> = ({ onComplete }) => {
     localStorage.setItem('user_style_preferences', JSON.stringify(preferences));
 
     // Call the onComplete callback to mark onboarding as finished
+    console.log('Calling onComplete callback, onComplete exists:', !!onComplete);
     if (onComplete) {
       onComplete();
+    } else {
+      console.warn('onComplete callback is not provided');
     }
   };
 
