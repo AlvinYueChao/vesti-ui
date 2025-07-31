@@ -79,8 +79,7 @@ const NETWORK_FALLBACK_ITEMS: Record<string, Record<ClothingCategory, OutfitItem
         isNetworkImage: true
       }
     ],
-    accessories: [],
-    outerwear: []
+    accessories: []
   },
   'weekend-date': {
     tops: [
@@ -119,8 +118,7 @@ const NETWORK_FALLBACK_ITEMS: Record<string, Record<ClothingCategory, OutfitItem
         isNetworkImage: true
       }
     ],
-    accessories: [],
-    outerwear: []
+    accessories: []
   },
   'beach-vacation': {
     tops: [
@@ -159,8 +157,7 @@ const NETWORK_FALLBACK_ITEMS: Record<string, Record<ClothingCategory, OutfitItem
         isNetworkImage: true
       }
     ],
-    accessories: [],
-    outerwear: []
+    accessories: []
   },
   'business-meeting': {
     tops: [
@@ -199,8 +196,7 @@ const NETWORK_FALLBACK_ITEMS: Record<string, Record<ClothingCategory, OutfitItem
         isNetworkImage: true
       }
     ],
-    accessories: [],
-    outerwear: []
+    accessories: []
   },
   'casual-shopping': {
     tops: [
@@ -230,8 +226,16 @@ const NETWORK_FALLBACK_ITEMS: Record<string, Record<ClothingCategory, OutfitItem
         isNetworkImage: true
       }
     ],
-    accessories: [],
-    outerwear: []
+    dresses: [
+      {
+        id: 'net-casual-dress-1',
+        name: '休闲连衣裙',
+        image: '/assets/images/network/casual-dress.jpg',
+        category: 'dresses',
+        isNetworkImage: true
+      }
+    ],
+    accessories: []
   },
   'party-night': {
     tops: [],
@@ -261,17 +265,7 @@ const NETWORK_FALLBACK_ITEMS: Record<string, Record<ClothingCategory, OutfitItem
         isNetworkImage: true
       }
     ],
-    dresses: [
-      {
-        id: 'net-casual-dress-1',
-        name: '休闲连衣裙',
-        image: '/assets/images/network/casual-dress.jpg',
-        category: 'dresses',
-        isNetworkImage: true
-      }
-    ],
-    accessories: [],
-    outerwear: []
+    accessories: []
   }
 };
 
@@ -571,8 +565,6 @@ class OutfitService {
         return ['shoes']; // 连衣裙只需要搭配鞋子
       case 'shoes':
         return ['tops', 'bottoms']; // 鞋子需要上装+下装或连衣裙，这里先返回上装+下装
-      case 'outerwear':
-        return ['tops', 'bottoms', 'shoes'];
       case 'accessories':
         return ['tops', 'bottoms', 'shoes']; // 配饰需要完整的基础搭配
       default:

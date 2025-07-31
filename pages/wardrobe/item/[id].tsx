@@ -17,8 +17,9 @@ const WardrobeItemDetail: React.FC = () => {
   const [itemDetail, setItemDetail] = useState<ItemDetailInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [addingToWardrobe, setAddingToWardrobe] = useState(false);
+  const [removingFromWardrobe, setRemovingFromWardrobe] = useState(false);
   
-  const { items: wardrobeItems, addItem: addToWardrobe, loading: wardrobeLoading } = useWardrobe('user-123');
+  const { items: wardrobeItems, addItem: addToWardrobe, removeItem: removeFromWardrobe, loading: wardrobeLoading } = useWardrobe('user-123');
   const { records, loading: diaryLoading } = useOutfitDiary('user-123');
 
   useEffect(() => {
@@ -32,7 +33,7 @@ const WardrobeItemDetail: React.FC = () => {
       return;
     }
 
-    // 首先在衣橱中查找
+    // 首先在衣橱中查找（通过ID匹配）
     const wardrobeItem = wardrobeItems.find(item => item.id === id);
     
     if (wardrobeItem) {
@@ -58,12 +59,20 @@ const WardrobeItemDetail: React.FC = () => {
     }
 
     if (outfitItem) {
+      // 检查是否已经通过名称、颜色、品牌等属性在衣橱中存在相同单品
+      const matchingWardrobeItem = wardrobeItems.find(item => 
+        item.name === outfitItem!.name && 
+        item.color === outfitItem!.color && 
+        item.category === outfitItem!.category &&
+        item.brand === outfitItem!.brand
+      );
+
       setItemDetail({
         ...outfitItem,
         description: `这是一件${outfitItem.color}的${outfitItem.name}，推荐用于搭配。`,
         material: outfitItem.material || getItemMaterial(outfitItem.category),
         stylingTips: getItemStylingTips(outfitItem.category, outfitItem.color),
-        isInWardrobe: false
+        isInWardrobe: !!matchingWardrobeItem
       });
     }
     
@@ -72,13 +81,21 @@ const WardrobeItemDetail: React.FC = () => {
 
   // 监听衣橱变化，实时更新单品的衣橱状态
   useEffect(() => {
-    if (itemDetail && !itemDetail.isInWardrobe) {
-      const isNowInWardrobe = wardrobeItems.some(item => item.id === itemDetail.id);
-      if (isNowInWardrobe) {
-        setItemDetail(prev => prev ? { ...prev, isInWardrobe: true } : null);
+    if (itemDetail) {
+      // 通过ID或属性匹配检查是否在衣橱中
+      const isNowInWardrobe = wardrobeItems.some(item => 
+        item.id === itemDetail.id || 
+        (item.name === itemDetail.name && 
+         item.color === itemDetail.color && 
+         item.category === itemDetail.category &&
+         item.brand === itemDetail.brand)
+      );
+      
+      if (isNowInWardrobe !== itemDetail.isInWardrobe) {
+        setItemDetail(prev => prev ? { ...prev, isInWardrobe: isNowInWardrobe } : null);
       }
     }
-  }, [wardrobeItems, itemDetail]);
+  }, [wardrobeItems, itemDetail?.id, itemDetail?.name, itemDetail?.color, itemDetail?.category, itemDetail?.brand]);
 
   const getItemMaterial = (category: string): string => {
     const materials: Record<string, string> = {
@@ -123,7 +140,23 @@ const WardrobeItemDetail: React.FC = () => {
     
     setAddingToWardrobe(true);
     try {
-      const newItem = await addToWardrobe({
+      // 检查是否已经存在相同的单品（通过属性匹配）
+      const existingItem = wardrobeItems.find(item => 
+        item.name === itemDetail.name && 
+        item.color === itemDetail.color && 
+        item.category === itemDetail.category &&
+        item.brand === itemDetail.brand
+      );
+
+      if (existingItem) {
+        // 如果已经存在，直接更新状态
+        setItemDetail(prev => prev ? { ...prev, isInWardrobe: true } : null);
+        alert('该单品已在您的衣橱中！');
+        return;
+      }
+
+      // 准备添加到衣橱的单品数据
+      const itemToAdd = {
         name: itemDetail.name,
         category: itemDetail.category,
         color: itemDetail.color,
@@ -133,16 +166,64 @@ const WardrobeItemDetail: React.FC = () => {
         imageUrl: itemDetail.image || itemDetail.imageUrl || '',
         tags: itemDetail.tags || [],
         addedDate: new Date()
-      });
+      };
+      
+      await addToWardrobe(itemToAdd);
       
       // 立即更新状态
-      setItemDetail(prev => prev ? { ...prev, isInWardrobe: true } : null);
+      setItemDetail(prev => prev ? { 
+        ...prev, 
+        isInWardrobe: true
+      } : null);
+      
       alert('已成功添加到衣橱！');
     } catch (error) {
       console.error('添加到衣橱失败:', error);
       alert('添加失败，请重试');
     } finally {
       setAddingToWardrobe(false);
+    }
+  };
+
+  const handleRemoveFromWardrobe = async () => {
+    if (!itemDetail || !itemDetail.isInWardrobe) return;
+    
+    // 确认删除
+    const confirmMessage = `确定要从衣橱中删除"${itemDetail.name}"吗？\n\n删除后将无法恢复。`;
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+    
+    setRemovingFromWardrobe(true);
+    try {
+      // 找到衣橱中对应的单品ID
+      const wardrobeItem = wardrobeItems.find(item => 
+        item.id === itemDetail.id || 
+        (item.name === itemDetail.name && 
+         item.color === itemDetail.color && 
+         item.category === itemDetail.category &&
+         item.brand === itemDetail.brand)
+      );
+
+      if (!wardrobeItem) {
+        alert('未找到要删除的单品');
+        return;
+      }
+
+      await removeFromWardrobe(wardrobeItem.id);
+      
+      // 立即更新状态
+      setItemDetail(prev => prev ? { 
+        ...prev, 
+        isInWardrobe: false
+      } : null);
+      
+      alert('已成功从衣橱中删除！');
+    } catch (error) {
+      console.error('从衣橱删除失败:', error);
+      alert('删除失败，请重试');
+    } finally {
+      setRemovingFromWardrobe(false);
     }
   };
 
@@ -268,13 +349,21 @@ const WardrobeItemDetail: React.FC = () => {
 
       {/* 底部操作栏 */}
       <div className="item-detail-page__actions">
-        {!itemDetail.isInWardrobe && (
+        {!itemDetail.isInWardrobe ? (
           <button 
             className="item-detail-page__action-btn item-detail-page__action-btn--primary"
             onClick={handleAddToWardrobe}
             disabled={addingToWardrobe}
           >
             {addingToWardrobe ? '添加中...' : '添加到衣橱'}
+          </button>
+        ) : (
+          <button 
+            className="item-detail-page__action-btn item-detail-page__action-btn--danger"
+            onClick={handleRemoveFromWardrobe}
+            disabled={removingFromWardrobe}
+          >
+            {removingFromWardrobe ? '删除中...' : '从衣橱删除'}
           </button>
         )}
       </div>

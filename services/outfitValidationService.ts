@@ -1,41 +1,92 @@
 // 穿搭验证服务
-import { ClothingItem, OutfitValidationResult, OutfitValidationError, OutfitComposition } from '../types';
+import { ClothingItem, OutfitValidationResult, OutfitValidationError, OutfitComposition, OutfitRule } from '../types';
 import { translationService } from './translationService';
 
 class OutfitValidationService {
-  
+
+  // 基础穿搭规则（基于提供的表格）
+  private readonly outfitRules: OutfitRule[] = [
+    {
+      id: 'valid_path_1',
+      name: '有效路径1',
+      combination: ['tops', 'bottoms', 'shoes'],
+      isValid: true,
+      note: '可选加配饰',
+      allowsAccessories: true
+    },
+    {
+      id: 'valid_path_2',
+      name: '有效路径2',
+      combination: ['dresses', 'shoes'],
+      isValid: true,
+      note: '可选加配饰',
+      allowsAccessories: true
+    },
+    {
+      id: 'invalid_conflict_1',
+      name: '无效冲突1',
+      combination: ['dresses', 'bottoms'],
+      isValid: false,
+      note: '功能属性重叠'
+    },
+    {
+      id: 'invalid_conflict_2',
+      name: '无效冲突2',
+      combination: ['dresses', 'tops'],
+      isValid: false,
+      note: '功能属性重叠（需排除外套等分层情况）'
+    },
+    {
+      id: 'invalid_conflict_3',
+      name: '无效冲突3',
+      combination: ['tops', 'tops'],
+      isValid: false,
+      note: '同层级功能属性重叠（如T恤+衬衫）'
+    },
+    {
+      id: 'invalid_conflict_4',
+      name: '无效冲突4',
+      combination: ['bottoms', 'bottoms'],
+      isValid: false,
+      note: '同层级功能属性重叠（如裤子+裙子）'
+    },
+    {
+      id: 'invalid_incomplete_1',
+      name: '无效基础1',
+      combination: ['tops', 'shoes'],
+      isValid: false,
+      note: '缺少下半身覆盖'
+    },
+    {
+      id: 'invalid_incomplete_2',
+      name: '无效基础2',
+      combination: ['bottoms', 'shoes'],
+      isValid: false,
+      note: '缺少上半身覆盖'
+    }
+  ];
+
   /**
    * 验证穿搭的完整性和合理性
-   * 规则：
-   * 1. 必须有上装+下装 或 连衣裙（二选一）
-   * 2. 必须有鞋子
-   * 3. 配饰是可选的
-   * 4. 连衣裙不能与下装同时存在
-   * 5. 一套穿搭只能有一条连衣裙
+   * 基于基础穿搭规则表格实现
    */
   validateOutfit(items: ClothingItem[]): OutfitValidationResult {
     const errors: OutfitValidationError[] = [];
     const warnings: OutfitValidationError[] = [];
-    
+
     // 按类别分组
     const composition = this.categorizeItems(items);
-    
-    // 验证基本穿搭规则
-    this.validateBasicRules(composition, errors);
-    
-    // 验证连衣裙规则
-    this.validateDressRules(composition, errors);
-    
-    // 验证鞋子
-    this.validateShoes(composition, errors);
-    
+
+    // 验证基础穿搭规则
+    this.validateByRules(composition, errors);
+
     return {
       isValid: errors.length === 0,
       errors,
       warnings
     };
   }
-  
+
   /**
    * 按类别分组单品
    */
@@ -45,10 +96,9 @@ class OutfitValidationService {
       bottoms: [],
       dresses: [],
       shoes: [],
-      accessories: [],
-      outerwear: []
+      accessories: []
     };
-    
+
     items.forEach(item => {
       switch (item.category) {
         case 'tops':
@@ -66,81 +116,122 @@ class OutfitValidationService {
         case 'accessories':
           composition.accessories.push(item);
           break;
-        case 'outerwear':
-          composition.outerwear.push(item);
-          break;
       }
     });
-    
+
     return composition;
   }
-  
+
   /**
-   * 验证基本穿搭规则
+   * 基于规则表格验证穿搭
    */
-  private validateBasicRules(composition: OutfitComposition, errors: OutfitValidationError[]): void {
+  private validateByRules(composition: OutfitComposition, errors: OutfitValidationError[]): void {
     const hasTops = composition.tops.length > 0;
     const hasBottoms = composition.bottoms.length > 0;
     const hasDresses = composition.dresses.length > 0;
-    
-    // 规则1: 必须有上装+下装 或 连衣裙
-    if (!hasDresses && !hasTops) {
+    const hasShoes = composition.shoes.length > 0;
+
+    // 1. 首先检查是否有多个同类型单品（同层级功能属性重叠）
+    this.validateDuplicateCategories(composition, errors);
+
+    // 2. 检查冲突规则（这些规则无论如何都不能违反）
+    if (hasDresses && hasBottoms) {
+      // 无效冲突1: 连衣裙+下装
       errors.push({
-        code: 'MISSING_TOPS_OR_DRESS',
-        message: translationService.translate('validation.missing_tops_or_dress'),
+        code: 'DRESS_WITH_BOTTOMS',
+        message: '连衣裙不能与下装同时搭配（功能属性重叠）',
+        category: 'dresses'
+      });
+    }
+
+    if (hasDresses && hasTops && !this.canTopsMatchWithDress(composition.tops)) {
+      // 无效冲突2: 连衣裙+普通上装（排除外套情况）
+      errors.push({
+        code: 'DRESS_WITH_REGULAR_TOPS',
+        message: '连衣裙不能与普通上装同时搭配（需排除外套等分层情况）',
+        category: 'dresses'
+      });
+    }
+
+    // 3. 检查基础完整性（必须有鞋子）
+    if (!hasShoes) {
+      errors.push({
+        code: 'MISSING_SHOES',
+        message: '缺少鞋子',
+        category: 'shoes'
+      });
+    }
+
+    // 4. 检查基础有效路径
+    const hasValidPath1 = hasTops && hasBottoms && hasShoes; // 上装+下装+鞋子
+    const hasValidPath2 = hasDresses && hasShoes && (!hasTops || this.canTopsMatchWithDress(composition.tops)) && !hasBottoms; // 连衣裙+鞋子（可选外套）
+
+    if (!hasValidPath1 && !hasValidPath2) {
+      // 检查具体缺失什么
+      if (hasTops && !hasBottoms && !hasDresses) {
+        // 无效基础1: 上装+鞋子（缺少下半身覆盖）
+        errors.push({
+          code: 'MISSING_BOTTOMS',
+          message: '缺少下半身覆盖',
+          category: 'bottoms'
+        });
+      } else if (hasBottoms && !hasTops && !hasDresses) {
+        // 无效基础2: 下装+鞋子（缺少上半身覆盖）
+        errors.push({
+          code: 'MISSING_TOPS',
+          message: '缺少上半身覆盖',
+          category: 'tops'
+        });
+      } else if (!hasTops && !hasDresses) {
+        errors.push({
+          code: 'MISSING_TOPS_OR_DRESS',
+          message: '需要上装或连衣裙',
+          category: 'tops'
+        });
+      }
+    }
+  }
+
+  /**
+   * 验证是否有重复的同类型单品
+   */
+  private validateDuplicateCategories(composition: OutfitComposition, errors: OutfitValidationError[]): void {
+    // 检查多个连衣裙
+    if (composition.dresses.length > 1) {
+      errors.push({
+        code: 'MULTIPLE_DRESSES',
+        message: '一套穿搭只能有一条连衣裙',
+        category: 'dresses'
+      });
+    }
+
+    // 检查多个同层级上装（排除外套情况）
+    const regularTops = composition.tops.filter(item => item.subType !== 'outerwear');
+    if (regularTops.length > 1) {
+      errors.push({
+        code: 'MULTIPLE_REGULAR_TOPS',
+        message: '同层级功能属性重叠（如T恤+衬衫）',
         category: 'tops'
       });
     }
-    
-    // 规则2: 如果有上装，必须有下装（除非有连衣裙）
-    if (hasTops && !hasBottoms && !hasDresses) {
+
+    // 检查多个下装
+    if (composition.bottoms.length > 1) {
       errors.push({
-        code: 'MISSING_BOTTOMS_WITH_TOPS',
-        message: translationService.translate('validation.missing_bottoms_with_tops'),
+        code: 'MULTIPLE_BOTTOMS',
+        message: '同层级功能属性重叠（如裤子+裙子）',
         category: 'bottoms'
       });
     }
   }
-  
+
   /**
-   * 验证连衣裙相关规则
+   * 检查上装是否可以与连衣裙搭配（外套可以，普通上装不可以）
    */
-  private validateDressRules(composition: OutfitComposition, errors: OutfitValidationError[]): void {
-    const hasDresses = composition.dresses.length > 0;
-    const hasBottoms = composition.bottoms.length > 0;
-    
-    // 规则3: 连衣裙不能与下装同时存在
-    if (hasDresses && hasBottoms) {
-      errors.push({
-        code: 'DRESS_WITH_BOTTOMS',
-        message: translationService.translate('validation.dress_with_bottoms'),
-        category: 'dresses'
-      });
-    }
-    
-    // 规则4: 一套穿搭只能有一条连衣裙
-    if (composition.dresses.length > 1) {
-      errors.push({
-        code: 'MULTIPLE_DRESSES',
-        message: translationService.translate('validation.multiple_dresses'),
-        category: 'dresses'
-      });
-    }
+  private canTopsMatchWithDress(tops: ClothingItem[]): boolean {
+    return tops.every(item => item.subType === 'outerwear');
   }
-  
-  /**
-   * 验证鞋子
-   */
-  private validateShoes(composition: OutfitComposition, errors: OutfitValidationError[]): void {
-    if (composition.shoes.length === 0) {
-      errors.push({
-        code: 'MISSING_SHOES',
-        message: translationService.translate('validation.missing_shoes'),
-        category: 'shoes'
-      });
-    }
-  }
-  
+
   /**
    * 检查穿搭是否完整（用于保存前的快速检查）
    */
@@ -148,7 +239,7 @@ class OutfitValidationService {
     const validation = this.validateOutfit(items);
     return validation.isValid;
   }
-  
+
   /**
    * 获取穿搭缺失的必要类别
    */
@@ -159,29 +250,55 @@ class OutfitValidationService {
       .map(error => error.category!)
       .filter((category, index, array) => array.indexOf(category) === index); // 去重
   }
-  
+
   /**
    * 检查是否可以添加特定类别的单品
    */
-  canAddCategory(currentItems: ClothingItem[], categoryToAdd: string): boolean {
+  canAddCategory(currentItems: ClothingItem[], categoryToAdd: string, subType?: string): boolean {
     // 创建临时穿搭来测试
     const testItem: ClothingItem = {
       id: 'test',
       name: 'test',
       category: categoryToAdd as any,
+      subType: subType as any,
       color: 'test',
       image: '',
       imageUrl: '',
       tags: [],
       addedDate: new Date()
     };
-    
+
     const testItems = [...currentItems, testItem];
     const validation = this.validateOutfit(testItems);
-    
+
     // 如果添加后没有新的错误，则可以添加
     const originalValidation = this.validateOutfit(currentItems);
     return validation.errors.length <= originalValidation.errors.length;
+  }
+
+  /**
+   * 获取穿搭规则列表
+   */
+  getOutfitRules(): OutfitRule[] {
+    return this.outfitRules;
+  }
+
+  /**
+   * 检查特定组合是否有效
+   */
+  isValidCombination(categories: string[]): boolean {
+    const rule = this.outfitRules.find(rule =>
+      rule.combination.length === categories.length &&
+      rule.combination.every(cat => categories.includes(cat))
+    );
+    return rule ? rule.isValid : false;
+  }
+
+  /**
+   * 获取推荐的穿搭组合
+   */
+  getRecommendedCombinations(): OutfitRule[] {
+    return this.outfitRules.filter(rule => rule.isValid);
   }
 }
 

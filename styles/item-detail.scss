@@ -228,6 +228,20 @@
         cursor: not-allowed;
       }
     }
+
+    &--danger {
+      background: #dc3545;
+      color: white;
+
+      &:hover:not(:disabled) {
+        background: #c82333;
+      }
+
+      &:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+    }
   }
 
   &__loading {
