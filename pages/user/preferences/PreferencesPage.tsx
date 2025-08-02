@@ -22,17 +22,52 @@ const PreferencesPage: React.FC = () => {
     // 从本地存储加载用户偏好设置
     const loadPreferences = () => {
       try {
+        let styleLabels = ['简约', '通勤'];
+        
+        // 首先尝试从风格测试结果加载
+        const styleTestPreferences = localStorage.getItem('user_style_preferences');
+        if (styleTestPreferences) {
+          const testData = JSON.parse(styleTestPreferences);
+          if (testData.tags && testData.customTags) {
+            // 将ID转换为标签名称
+            const defaultTags = [
+              { id: 'simple', name: '简约' },
+              { id: 'casual', name: '通勤' },
+              { id: 'sweet', name: '甜美' },
+              { id: 'formal', name: '法式' },
+              { id: 'vintage', name: '复古' },
+              { id: 'leisure', name: '休闲' },
+              { id: 'literary', name: '文艺' },
+              { id: 'street', name: '街头' },
+              { id: 'elegant', name: '优雅' },
+              { id: 'forest', name: '森系' },
+              { id: 'intellectual', name: '知性' },
+              { id: 'sporty', name: '运动' },
+            ];
+            
+            const allTags = [...defaultTags, ...testData.customTags];
+            styleLabels = testData.tags.map((tagId: string) => {
+              const tag = allTags.find(t => t.id === tagId);
+              return tag ? tag.name : tagId;
+            });
+          }
+        }
+
+        // 然后尝试从用户偏好设置加载
         const savedPreferences = localStorage.getItem('userPreferences');
         if (savedPreferences) {
           const parsed = JSON.parse(savedPreferences);
-          // 确保所有必需的字段都存在，如果不存在则使用默认值
-          setPreferences({
-            styleLabels: parsed.styleLabels || ['简约', '通勤'],
-            blockedItems: parsed.blockedItems || ['item-1', 'item-2', 'item-3'],
-            dailyDesignPush: parsed.dailyDesignPush !== undefined ? parsed.dailyDesignPush : true,
-            trendNewsPush: parsed.trendNewsPush !== undefined ? parsed.trendNewsPush : false
-          });
+          if (parsed.styleLabels) {
+            styleLabels = parsed.styleLabels;
+          }
         }
+
+        setPreferences({
+          styleLabels: styleLabels,
+          blockedItems: savedPreferences ? JSON.parse(savedPreferences).blockedItems || ['item-1', 'item-2', 'item-3'] : ['item-1', 'item-2', 'item-3'],
+          dailyDesignPush: savedPreferences ? JSON.parse(savedPreferences).dailyDesignPush !== undefined ? JSON.parse(savedPreferences).dailyDesignPush : true : true,
+          trendNewsPush: savedPreferences ? JSON.parse(savedPreferences).trendNewsPush !== undefined ? JSON.parse(savedPreferences).trendNewsPush : false : false
+        });
       } catch (error) {
         console.error('Error loading preferences:', error);
       }
